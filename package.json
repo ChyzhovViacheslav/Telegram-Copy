@@ -1,0 +1,24 @@
+{
+  "name": "simplechat",
+  "version": "1.0.0",
+  "description": "telegram app copy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "next dev",
+    "server": "nodemon server/index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\" "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^7.6.0",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.0",
+    "next": "^13.2.3",
+    "nodemon": "^2.0.20",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^5.3.6"
+  }
+}
