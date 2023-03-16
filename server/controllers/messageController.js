@@ -1,13 +1,15 @@
+const { createKey } = require("next/dist/shared/lib/router/router");
 const Message = require("../models/Message")
 const Room = require("../models/Room")
 
 class messageController {
     async sendMessage(req, res) {
         try {
-            const { text, author } = req.body
+            const { text } = req.body
+            const { id } = req.user
             const { room } = req.params;
 
-            const message = new Message({ message: text, author, room })
+            const message = new Message({ message: text, author: id, room })
 
             await message.save()
             res.json({ message: 'Message send!' })
@@ -35,7 +37,19 @@ class messageController {
 
             const messages = await Message.find({ room })
 
-            res.json({messages})
+            res.json({ messages })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async getLastMessageRoom(req, res) {
+        try {
+            const { room } = req.params
+
+            const message = await Message.findOne({ room }).sort({ created_at: -1 })
+
+            res.json(message)
         } catch (error) {
             console.log(error)
         }
