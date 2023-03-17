@@ -15,7 +15,7 @@ const userRouter = require('./routes/usersRouter')
 const messageRouter = require('./routes/messageRouter')
 const initSocket = require('./socket')
 
-app.use(cors())
+app.use(cors({credentials: true, origin: process.env.FRONT_URL}))
 app.use(cookieParser())
 app.use(express.json())
 app.use('/user', userRouter)

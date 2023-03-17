@@ -75,14 +75,21 @@ class usersController {
             res.cookie(
                 'refreshToken',
                 tokens.refreshToken,
-                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+            )
 
+            res.cookie(
+                'accessToken',
+                tokens.accessToken,
+                { maxAge: 60 * 60 * 24 * 7, httpOnly: true }
+            )
+            
             return res.status(200).json({
                 ...tokens,
                 user: userDto
             })
         } catch (error) {
-            console.log(error)
+            res.status(400).json({ error })
         }
     }
 

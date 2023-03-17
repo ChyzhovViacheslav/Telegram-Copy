@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: []
+    whitelist: ['authSlice']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
