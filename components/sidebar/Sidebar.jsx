@@ -9,7 +9,6 @@ import Users from '../Users/Users'
 const Container = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 15px;
     background-color: rgb(22, 29, 46);
     height: 100%;
     width: 500px;

@@ -4,8 +4,11 @@ const controller = require('../controllers/messageController')
 const authMiddleware = require('../middleware/auth-middleware')
 
 router.post('/room', authMiddleware, controller.createRoom)
-router.post('/:room/messages', authMiddleware, controller.sendMessage)
-router.get('/:room', authMiddleware, controller.getMessagesRoom)
-router.get('/:room/last', authMiddleware, controller.getLastMessageRoom)
+router.post('/send/:room', authMiddleware, controller.sendMessage)
+router.get('/messages/:room', authMiddleware, controller.getMessagesRoom)
+router.get('/last/:room', authMiddleware, controller.getLastMessageRoom)
+router.get('/rooms', authMiddleware, controller.getCurrentRooms)
+router.put('/assign/:room', authMiddleware, controller.assignRoom)
+router.put('/untie/:room', authMiddleware, controller.untieRoom)
 
 module.exports = router

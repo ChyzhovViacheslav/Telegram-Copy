@@ -26,6 +26,12 @@ export const authUser = createApi({
                 method: 'POST',
                 body
             })
+        }),
+        refreshToken: build.query({
+            query: () => ({
+                url: '/refresh',
+                method: 'GET'
+            })
         })
     })
 })

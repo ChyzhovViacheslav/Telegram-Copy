@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit"
+import { roomService } from "../../services/RoomService"
 
 const initialState = {
     email: null,
     username: null,
     image: null,
     _id: null,
+    accessToken: null,
+    refreshToken: null,
+    expiresAt: null
 }
 
 export const authSlice = createSlice({
@@ -22,8 +26,18 @@ export const authSlice = createSlice({
             state.username = null
             state.image = null
             state._id = null
+        },
+        setToken(state, action){
+            state.accessToken = action.payload.accessToken
+            state.expiresAt = action.payload.expiresAt
+            state.refreshToken = action.payload.refreshToken
+        },
+        removeToken(state, action){
+            state.accessToken = null
+            state.expiresAt = null
+            state.refreshToken = null
         }
     }
 })
-export const {setUser, removeUser} = authSlice.actions
+export const {setUser, removeUser, setToken, removeToken} = authSlice.actions
 export default authSlice.reducer

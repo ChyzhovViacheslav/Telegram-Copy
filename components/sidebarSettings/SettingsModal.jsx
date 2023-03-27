@@ -35,16 +35,17 @@ const LoginBtn = styled.div`
         background-color: rgb(12, 17, 26);
     }
     h1{
+        font-weight: 400;
         text-transform: uppercase;
         letter-spacing: 8px;
     }
 `
 
 export default function SettingsModal() {
-    const { isAuth } = useAuth()
+    const { isAuth, image, expiresAt } = useAuth()
     const { settingsModal } = useAppSelector(state => state.modalSlice)
     const dispatch = useAppDispatch()
-
+    
     return (
         <SettingsModalWrapper
             active={settingsModal}

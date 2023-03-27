@@ -2,9 +2,42 @@ const User = require('../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
-const { secret } = require('../config.js')
 const tokenService = require('../service/token-service')
 const UserDto = require('../dtos/user-dto.js')
+const fs = require('fs')
+const path = require('path')
+const { createCanvas } = require('canvas')
+
+const createLogo = (username) => {
+    const imageName = `${Date.now()}.png`
+
+    const backgroundColor = [
+        '#C98BB9',
+        '#7293DC',
+        '#b7bf73',
+        '#73DEC9',
+        '#E0C08D',
+        '#BBD3FC',
+        '#96e3c8'
+    ]
+
+    const randomNum = Math.floor(Math.random() * (backgroundColor.length - 0) + 0)
+
+    const canvas = createCanvas(200, 200)
+    const context = canvas.getContext('2d')
+
+    context.fillStyle = backgroundColor[randomNum];
+    context.fillRect(0, 0, 200, 200);
+
+    context.font = "regular 100pt 'PT Sans'"
+    context.textAlign = 'center'
+    context.fillStyle = '#fff'
+    context.fillText(username[0].toUpperCase(), 100, 150)
+
+    const buffer = canvas.toBuffer('image/png')
+    fs.writeFileSync(path.resolve('server', 'images', imageName), buffer)
+    return imageName
+}
 
 class usersController {
     async registration(req, res) {
@@ -25,12 +58,10 @@ class usersController {
 
             const hasPass = bcrypt.hashSync(password, 7)
 
-            const defaultAvatar = null
-
             const user = await User.create({
                 email,
                 username,
-                image: defaultAvatar,
+                image: createLogo(username),
                 password: hasPass
             })
 
@@ -41,10 +72,12 @@ class usersController {
             res.cookie(
                 'refreshToken',
                 tokens.refreshToken,
-                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+            )
 
             return res.status(200).json({
                 ...tokens,
+                expiresAt: new Date(new Date().getTime() + 30 * 60 * 1000),
                 user: userDto
             })
 
@@ -78,14 +111,9 @@ class usersController {
                 { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
             )
 
-            res.cookie(
-                'accessToken',
-                tokens.accessToken,
-                { maxAge: 60 * 60 * 24 * 7, httpOnly: true }
-            )
-            
             return res.status(200).json({
                 ...tokens,
+                expiresAt: new Date(new Date().getTime() + 30 * 60 * 1000),
                 user: userDto
             })
         } catch (error) {
@@ -123,7 +151,7 @@ class usersController {
 
             const userData = tokenService.validateRefreshToken(refreshToken)
             const tokenFromDb = await tokenService.findToken(refreshToken)
-
+            
             if (!tokenFromDb || !userData) {
                 return res.status(400).json({ message: 'Token not found!' })
             }
@@ -132,7 +160,7 @@ class usersController {
             const userDto = new UserDto(user);
             const tokens = tokenService.generateTokens({ ...userDto })
             await tokenService.saveToken(userDto.id, tokens.refreshToken);
-
+            
             res.cookie(
                 'refreshToken',
                 tokens.refreshToken,
@@ -140,7 +168,8 @@ class usersController {
 
             return res.status(200).json({
                 ...tokens,
-                user: userDto
+                user: userDto,
+                expiresAt: new Date(new Date().getTime() + 30 * 60 * 1000)
             })
 
         } catch (error) {

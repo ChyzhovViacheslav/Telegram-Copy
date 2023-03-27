@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { roomService } from '../../services/RoomService'
 import User from '../User/User'
 
 const UsersWrapper = styled.div`
@@ -8,6 +9,7 @@ const UsersWrapper = styled.div`
 `
 
 export default function Users() {
+  const { data, isLoading } = roomService.useGetCurrentRoomsQuery()
 
   return (
     <UsersWrapper>

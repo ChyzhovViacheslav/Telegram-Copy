@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { authUser } from '../../../services/AuthUser'
 import { changeAuthModal } from '../../../store/reducers/modalSlice'
-import { setUser } from '../../../store/reducers/authSlice'
+import { setToken, setUser } from '../../../store/reducers/authSlice'
 import useAuth from '../../../hooks/useAuth'
 
 const ModalWrapper = styled.div`
@@ -70,11 +70,11 @@ const FormRegister = styled.form`
     label{
         p{
             font-size: 16px;
-            text-transform: uppercase;
+            text-transform: capitalize;
             margin-bottom: 10px;
         }
         input{
-            border: 2px solid white;
+            border: 1px solid white;
             background-color: inherit;
             padding: 5px 10px;
             font-size: 16px;
@@ -115,11 +115,11 @@ const FormLogin = styled.form`
     label{
         p{
             font-size: 16px;
-            text-transform: uppercase;
+            text-transform: capitalize;
             margin-bottom: 10px;
         }
         input{
-            border: 2px solid white;
+            border: 1px solid white;
             background-color: inherit;
             padding: 5px 10px;
             font-size: 16px;
@@ -140,6 +140,7 @@ const FormLogin = styled.form`
             }
         }
         span{
+            text-transform: uppercase;
             font-size: 20px;
             transition: all 0.2s ease-in-out;
         }
@@ -168,7 +169,6 @@ export default function AuthModal() {
     const [registerUser] = authUser.useRegisterUserMutation()
 
     const { authModal } = useAppSelector(state => state.modalSlice)
-    const { } = useAppSelector(state => state.authSlice)
     const dispatch = useAppDispatch()
     const [currentForm, setCurrentForm] = useState('login')
 
@@ -179,28 +179,39 @@ export default function AuthModal() {
     const [regPass, setRegPass] = useState('')
     const [regEmail, setRegEmail] = useState('')
 
-    console.log(document.cookie)
+    const loginHandler = async (e) => {
+        e.preventDefault()
 
-    const loginHandler = async () => {
         const candidate = {
             email: loginEmail,
             password: loginPass
         }
-        await loginUser({
-            email: loginEmail,
-            password: loginPass
-        })
+        
+        await loginUser(candidate)
             .then(({data}) => {
-                console.log(data)
+                dispatch(setToken(data))
                 dispatch(setUser(data.user))
+                dispatch(changeAuthModal(false))
             })
-            .catch(() => {
-                console.log('error')
-            })
+            .catch((e) => console.log(e))
     }
 
-    const registerHandler = async () => {
+    const registerHandler = async (e) => {
+        e.preventDefault()
 
+        const candidate = {
+            email: regEmail,
+            password: regPass,
+            username: regUsername
+        }
+
+        await registerUser(candidate)
+            .then(({data}) => {
+                dispatch(setToken(data))
+                dispatch(setUser(data.user))
+                dispatch(changeAuthModal(false))
+            })
+            .catch((e) => console.log(e))
     }
 
     return (
@@ -237,7 +248,7 @@ export default function AuthModal() {
                                 onChange={(e) => setRegPass(e.target.value)}
                                 type="text" />
                         </label>
-                        <button><span>REGISTER</span></button>
+                        <button onClick={(e) => registerHandler(e)}><span>REGISTER</span></button>
                     </FormRegister>
                     <FormLogin>
                         <label>
@@ -253,10 +264,7 @@ export default function AuthModal() {
                                 type="text" />
                         </label>
                         <div className='btn'>
-                            <button onClick={(e) => {
-                                e.preventDefault()
-                                loginHandler()
-                            }}>
+                            <button onClick={(e) => loginHandler(e)}>
                                 <span>Login</span>
                             </button>
                         </div >

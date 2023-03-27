@@ -1,5 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
+
+const InputWrapper = styled.div`
+    position: relative;
+`
 
 const Input = styled.input`
     width: 100%;
@@ -14,10 +18,28 @@ const Input = styled.input`
     }
 `
 
+const CloseBtn = styled.div`
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    right: 5px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    background-color: red;
+`
+
 export default function InputSearch() {
+    const [text, setText] = useState('')
+
     return (
-        <Input
-            type='text'
-            placeholder='Поиск' />
+        <InputWrapper>
+            <Input
+                type='text'
+                placeholder='Поиск'
+                value={text}
+                onChange={(e) => setText(e.target.value)}/>
+            {text.length ? <CloseBtn onClick={() => setText('')}/> : null}
+        </InputWrapper>
     )
 }
