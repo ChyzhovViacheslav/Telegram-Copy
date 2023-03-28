@@ -1,5 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import useAuth from '../../hooks/useAuth'
+import { authUser } from '../../services/AuthUser'
+import { roomService } from '../../services/RoomService'
 import Logo from '../interface/logo/Logo'
 
 const UserWrapper = styled.div`
@@ -28,16 +31,30 @@ const Container = styled.div`
     }
 `
 
-export default function User({ username, msg }) {
-  const message = 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dicta minus sed hic voluptatem odit tempore aperiam, voluptates corrupti voluptatibus ad repellat quam earum eveniet deleniti at nisi nesciunt omnis soluta.'
+export default function User({ roomId }) {
+  const { id: currentUserId } = useAuth()
+  const [userId, setUserId] = useState(null)
+  const { data: room, isLoading: roomIsLoading } = roomService.useGetOneRoomQuery({ room: roomId })
+  const { data: lastMessage, isLoading: messageIsLoading } = roomService.useGetLastMessageRoomQuery({ room: roomId })
+  const { data: user } = authUser.useGetOneUserQuery({ id: userId }, { skip: !userId })
+
+  useEffect(() => {
+    if (room) {
+      setUserId(room.users.filter(id => id !== currentUserId)[0])
+    }
+  }, [roomIsLoading])
 
   return (
-    <UserWrapper>
-      <Logo />
-      <Container>
-        <h2>PomPushka</h2>
-        <p>{message.slice(0, 65)}...</p>
-      </Container>
+    <UserWrapper onContextMenu={(e) => e.preventDefault()}>
+      {user && !messageIsLoading ?
+        <>
+          <Logo image={user?.image} />
+          <Container>
+            <h2>{user?.username}</h2>
+            <p>{lastMessage?.slice(0, 65)}...</p>
+          </Container>
+        </>
+        : <h1>Load...</h1>}
     </UserWrapper>
   )
 }

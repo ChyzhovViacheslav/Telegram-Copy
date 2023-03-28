@@ -31,13 +31,13 @@ export const roomService = createApi({
             })
         }),
         getAllMessagesRoom: build.query({
-            query: (room) => ({
+            query: ({room}) => ({
                 url: `/messages/${room}`,
                 method: 'GET'
             })
         }),
         getLastMessageRoom: build.query({
-            query: (room) => ({
+            query: ({room}) => ({
                 url: `/last/${room}`,
                 method: 'GET'
             })
@@ -49,7 +49,7 @@ export const roomService = createApi({
             })
         }),
         assignRoom: build.mutation({
-            query: (room) => ({
+            query: ({room}) => ({
                 url: `/assign/${room}`,
                 method: 'PUT'
             })
@@ -58,6 +58,12 @@ export const roomService = createApi({
             query: (room) => ({
                 url: `/untie/${room}`,
                 method: 'PUT'
+            })
+        }),
+        getOneRoom: build.query({
+            query: ({room}) => ({
+                url: `/room/${room}`,
+                method: 'GET'
             })
         })
     })

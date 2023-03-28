@@ -13,5 +13,6 @@ router.post('/register', [
 ], controller.registration)
 router.get('/logout', controller.logout)
 router.get('/refresh', controller.refreshToken)
+router.get('/user/:id', controller.getOneUser)
 
 module.exports = router

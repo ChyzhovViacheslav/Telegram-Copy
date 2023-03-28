@@ -151,7 +151,7 @@ class usersController {
 
             const userData = tokenService.validateRefreshToken(refreshToken)
             const tokenFromDb = await tokenService.findToken(refreshToken)
-            
+
             if (!tokenFromDb || !userData) {
                 return res.status(400).json({ message: 'Token not found!' })
             }
@@ -160,7 +160,7 @@ class usersController {
             const userDto = new UserDto(user);
             const tokens = tokenService.generateTokens({ ...userDto })
             await tokenService.saveToken(userDto.id, tokens.refreshToken);
-            
+
             res.cookie(
                 'refreshToken',
                 tokens.refreshToken,
@@ -174,6 +174,24 @@ class usersController {
 
         } catch (error) {
             console.log(error)
+            res.status(400).json(error)
+        }
+    }
+
+    async getOneUser(req, res) {
+        try {
+            const { id } = req.params
+
+            const user = await User.findById(id)
+
+            if(!user){
+                res.status(400).json({message: 'User not found'})
+            }
+
+            res.status(200).json(user)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
         }
     }
 }

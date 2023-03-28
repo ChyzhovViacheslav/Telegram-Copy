@@ -15,13 +15,12 @@ const LogoStyle = styled.div`
     }
 `
 
-export default function Logo({ photo }) {
-  // const photos = require('../../../server/images/1679777347168.png')
+export default function Logo({ image }) {
   return (
     <LogoStyle>
-      {/* <Image
+      {image === undefined ? null :<Image
         alt="user logo"
-        src={''}/> */}
+        src={require(`../../../server/images/${image}`)}/>}
     </LogoStyle>
   )
 }

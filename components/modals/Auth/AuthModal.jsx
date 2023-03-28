@@ -189,6 +189,7 @@ export default function AuthModal() {
         
         await loginUser(candidate)
             .then(({data}) => {
+                console.log(data)
                 dispatch(setToken(data))
                 dispatch(setUser(data.user))
                 dispatch(changeAuthModal(false))

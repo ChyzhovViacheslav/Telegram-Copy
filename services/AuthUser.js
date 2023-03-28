@@ -4,7 +4,16 @@ export const authUser = createApi({
     reducerPath: 'authUser',
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:2000/user',
-        credentials: 'include'
+        credentials: 'include',
+        prepareHeaders: (headers, { getState }) => {
+            const { accessToken: token } = getState().authSlice
+
+            if (token) {
+                headers.set('Authorization', `Bearer ${token}`)
+            }
+
+            return headers;
+        },
     }),
     endpoints: (build) => ({
         getAllUsers: build.query({
@@ -31,6 +40,12 @@ export const authUser = createApi({
             query: () => ({
                 url: '/refresh',
                 method: 'GET'
+            })
+        }),
+        getOneUser: build.query({
+            query: ({id}) => ({
+                url: `/user/${id}`,
+                method: 'GET',
             })
         })
     })

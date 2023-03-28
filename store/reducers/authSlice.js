@@ -5,7 +5,7 @@ const initialState = {
     email: null,
     username: null,
     image: null,
-    _id: null,
+    id: null,
     accessToken: null,
     refreshToken: null,
     expiresAt: null
@@ -19,13 +19,13 @@ export const authSlice = createSlice({
             state.email = action.payload.email
             state.username = action.payload.username
             state.image = action.payload.image
-            state._id = action.payload._id
+            state.id = action.payload.id
         },
         removeUser(state, action){
             state.email = null
             state.username = null
             state.image = null
-            state._id = null
+            state.id = null
         },
         setToken(state, action){
             state.accessToken = action.payload.accessToken

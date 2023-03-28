@@ -22,12 +22,56 @@ class messageController {
 
     async createRoom(req, res) {
         try {
-            const { name } = req.body
+            const { id } = req.user
+            const { name, user } = req.body
 
-            const room = new Room({ name })
+            const users = [id, user]
+
+            const room = new Room({ name, users })
+
+            users.forEach(async user => {
+                const candidate = await User.findById(user)
+
+                if (!candidate) {
+                    res.status(400).json({ message: 'User not found' })
+                }
+
+                candidate.current_rooms = [...candidate.current_rooms, room._id]
+
+                await candidate.save()
+            })
 
             await room.save()
             res.status(200).json({ message: `Room "${name}" created` })
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
+        }
+    }
+
+    async deleteRoom(req, res) {
+        try {
+            const { id: userId } = req.user
+            const { id } = req.params
+
+
+            const room = await Room.findById(id)
+
+            if (!room.users.includes(userId)) {
+                res.status(400).json({ message: `It's not your room!` })
+            }
+
+            room.users.map(async user => {
+                const candidate = await user.findById(user._id)
+
+                candidate.current_rooms = candidate.current_rooms.filter(item => item != id)
+
+                await candidate.save()
+            })
+
+            await room.deleteOne()
+
+            res.status(200).json({ message: `Room ${id} deleted` })
         } catch (error) {
             console.log(error)
             res.status(400).json(error)
@@ -101,6 +145,23 @@ class messageController {
             await user.save()
 
             res.status(200).json(user.current_rooms)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
+        }
+    }
+
+    async getOneRoom(req, res) {
+        try {
+            const { id } = req.params
+
+            const room = await Room.findById(id)
+
+            if(!room){
+                res.status(400).json({message: 'Room not found'})
+            }
+
+            res.status(200).json(room)
         } catch (error) {
             console.log(error)
             res.status(400).json(error)
