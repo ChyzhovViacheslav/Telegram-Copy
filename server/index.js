@@ -8,7 +8,12 @@ const cookieParser = require('cookie-parser')
 
 const app = express()
 const server = http.createServer(app)
-const io = require('socket.io')(server)
+const io = require('socket.io')(server, {
+    cors: {
+        origin: process.env.FRONT_URL,
+        methods: ['GET', 'POST', 'PUT']
+    }
+})
 const PORT = process.env.PORT || 2000
 
 const userRouter = require('./routes/usersRouter')

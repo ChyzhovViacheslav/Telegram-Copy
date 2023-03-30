@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useAppSelector } from '../../hooks/redux'
+import Room from '../Room/Room'
 import Search from '../Serach/Search'
 import Settings from '../sidebarSettings/Settings'
 import SettingsModal from '../sidebarSettings/SettingsModal'
@@ -12,6 +13,7 @@ const Container = styled.div`
     background-color: rgb(22, 29, 46);
     height: 100%;
     width: 500px;
+    flex-shrink: 0;
 `
 
 const SidebarWrapper = styled.div`
@@ -21,7 +23,6 @@ const SidebarWrapper = styled.div`
 `
 
 export default function Sidebar() {
-    const { some } = useAppSelector(state => state.authSlice)
 
     return (
         <SidebarWrapper>
@@ -30,6 +31,7 @@ export default function Sidebar() {
                 <Search />
                 <Users />
             </Container>
+            <Room/>
             <SettingsModal/>
         </SidebarWrapper>
     )

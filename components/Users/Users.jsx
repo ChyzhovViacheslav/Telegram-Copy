@@ -10,9 +10,7 @@ const UsersWrapper = styled.div`
 `
 
 export default function Users() {
-  const { _id } = useAuth()
   const { data: rooms, isLoading } = roomService.useGetCurrentRoomsQuery()
-
 
   const renderRooms = () => {
     return rooms?.current_rooms.map((room) => {

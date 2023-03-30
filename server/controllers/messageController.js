@@ -26,16 +26,16 @@ class messageController {
             const { name, user } = req.body
 
             const users = [id, user]
-
+            
             const room = new Room({ name, users })
 
             users.forEach(async user => {
                 const candidate = await User.findById(user)
-
+                
                 if (!candidate) {
                     res.status(400).json({ message: 'User not found' })
                 }
-
+                
                 candidate.current_rooms = [...candidate.current_rooms, room._id]
 
                 await candidate.save()

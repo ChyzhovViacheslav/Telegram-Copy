@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import AuthModal from '../components/modals/Auth/AuthModal'
 import Sidebar from '../components/sidebar/Sidebar'
-import Settings from '../components/sidebarSettings/Settings'
 
 const App = styled.div`
   display: flex;

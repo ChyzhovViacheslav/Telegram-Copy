@@ -6,40 +6,31 @@ function initSocket(io) {
     io.on('connection', socket => {
         console.log('user connected');
 
+        socket.on('joinRoom', ({room_id}) => {
+            socket.join(room_id);
+            console.log(`User ${socket.id} joined room`);
+        });
+
+        socket.on('sendMessage', async ({ text, room_id, user_id }) => {
+            const message = new Message({
+                author: user_id,
+                message: text,
+                room: room_id
+            });
+
+            await message.save();
+
+            io.to(room_id).emit('newMessage', message);
+        });
+
+        socket.on('getMessages', async ({ room_id }) => {
+            const messages = await Message.find({ room: room_id })
+
+            socket.emit('allMessages', messages)
+        })
+
         socket.on('disconnect', () => {
             console.log('user disconnected');
-        });
-
-        socket.on('joinRoom', roomName => {
-            socket.join(roomName);
-            console.log(`User ${socket.id} joined room ${roomName}`);
-        });
-
-        socket.on('leaveRoom', roomName => {
-            socket.leave(roomName);
-            console.log(`User ${socket.id} left room ${roomName}`);
-        });
-
-        socket.on('sendMessage', ({ text, room_id, user_id }) => {
-            const message = new Message({ text, user_id, room_id });
-            message.save((err, savedMessage) => {
-                if (err) {
-                    console.log(err);
-                } else {
-                    io.to(room_id).emit('message', savedMessage);
-                }
-            });
-        });
-
-        socket.on('createRoom', roomName => {
-            try {
-                const room = new Room({ name: roomName });
-                room.save()
-                socket.join(roomName);
-                console.log(`User ${socket.id} created room ${roomName}`);
-            } catch (error) {
-                console.log(err)
-            }
         });
     });
 }

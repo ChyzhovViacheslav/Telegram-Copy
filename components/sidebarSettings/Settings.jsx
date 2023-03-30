@@ -1,13 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import {changeSettingsModal} from '../../store/reducers/modalSlice'
+import { changeSettingsModal } from '../../store/reducers/modalSlice'
 
 const SettingsWrapper = styled.div`
-    width: 75px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  flex-shrink: 0;
+  width: 75px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 `
 
 const Profile = styled.div`
@@ -40,7 +41,7 @@ const Profile = styled.div`
 `
 
 export default function Settings() {
-  const {settingsModal} = useAppSelector(state => state.modalSlice)
+  const { settingsModal } = useAppSelector(state => state.modalSlice)
   const dispatch = useAppDispatch()
 
   return (
