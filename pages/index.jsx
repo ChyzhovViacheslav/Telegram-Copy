@@ -1,22 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
 import AuthModal from '../components/modals/Auth/AuthModal'
-import Sidebar from '../components/sidebar/Sidebar'
+import useAuth from '../hooks/useAuth'
+import Main from '../components/Main/Main'
 
 const App = styled.div`
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
-  background-color: rgb(19, 25, 37);
+  background-color: var(--surface-color);
 `
 
 export default function Index() {
-
+  const { isAuth } = useAuth()
   return (
     <App>
-      <Sidebar />
-      <AuthModal />
+      {isAuth ? <Main /> : <AuthModal />}
     </App>
   )
 }

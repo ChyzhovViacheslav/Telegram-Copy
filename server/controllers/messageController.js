@@ -41,7 +41,15 @@ class messageController {
                 await candidate.save()
             })
 
+            const message = new Message({
+                author: 'system', 
+                message: 'Room created!', 
+                room: room._id
+            })
+
             await room.save()
+            await message.save()
+            
             res.status(200).json({ message: `Room "${name}" created` })
         } catch (error) {
             console.log(error)

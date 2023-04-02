@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { useAppDispatch } from '../../hooks/redux'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import useAuth from '../../hooks/useAuth'
 import { authUser } from '../../services/AuthUser'
 import { roomService } from '../../services/RoomService'
@@ -13,7 +13,8 @@ const UserWrapper = styled.div`
     align-items: center;
     padding: 10px 15px;
     cursor: pointer;
-    :hover{
+    background-color: ${props => props.current ? 'var(--primary-color)' : 'none'} !important;
+    &:hover{
       background-color: #a1a1a114;
     }
 `
@@ -29,7 +30,7 @@ const Container = styled.div`
       font-weight: 400;
     }
     p{
-      color: #797979;
+      color: ${props => props.current ? 'var(--primary-text-color)' : 'var(--secondary-text-color)'};
     }
 `
 
@@ -41,6 +42,7 @@ export default function User({ roomId }) {
   const { data: room, isLoading: roomIsLoading } = roomService.useGetOneRoomQuery({ room: roomId })
   const { data: lastMessage, isLoading: messageIsLoading } = roomService.useGetLastMessageRoomQuery({ room: roomId })
   const { data: user } = authUser.useGetOneUserQuery({ id: userId }, { skip: !userId })
+  const { currentRoom } = useAppSelector(state => state.roomSlice)
 
   useEffect(() => {
     if (room) {
@@ -54,14 +56,18 @@ export default function User({ roomId }) {
 
   return (
     <UserWrapper
+      current={roomId === currentRoom}
       onClick={() => openRoomHandler()}
       onContextMenu={(e) => e.preventDefault()}>
       {user && !messageIsLoading ?
         <>
           <Logo image={user?.image} />
-          <Container>
+          <Container current={roomId === currentRoom}>
             <h2>{user?.username}</h2>
-            {/* <p>{lastMessage?.slice(0, 65)}...</p> */}
+            {lastMessage.message.length >= 65 ?
+              <p>{lastMessage.message.slice(0, 65)}...</p>
+              :
+              <p>{lastMessage.message}</p>}
           </Container>
         </>
         : <h1>Load...</h1>}

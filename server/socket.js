@@ -1,6 +1,4 @@
-const messageController = require("./controllers/messageController");
 const Message = require("./models/Message");
-const Room = require("./models/Room")
 
 function initSocket(io) {
     io.on('connection', socket => {

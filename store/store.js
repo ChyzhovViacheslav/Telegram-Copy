@@ -5,12 +5,10 @@ import { tokenMiddleware } from "../middleware/tokenMiddleware";
 import { authUser } from "../services/AuthUser";
 import { roomService } from "../services/RoomService";
 import authSlice from "./reducers/authSlice";
-import modalSlice from "./reducers/modalSlice";
 import roomSlice from './reducers/roomSlice';
 
 const rootReducer = combineReducers({
     authSlice,
-    modalSlice,
     roomSlice,
     [authUser.reducerPath]: authUser.reducer,
     [roomService.reducerPath]: roomService.reducer

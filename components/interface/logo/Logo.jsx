@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 const LogoStyle = styled.div`
     border-radius: 100%;
-    background-color: red;
     width: 50px;
     height: 50px;
     flex-shrink: 0;
