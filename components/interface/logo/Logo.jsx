@@ -4,19 +4,19 @@ import styled from 'styled-components'
 
 const LogoStyle = styled.div`
     border-radius: 100%;
-    width: 50px;
-    height: 50px;
+    width: ${props => props.size};
+    height: ${props => props.size};
     flex-shrink: 0;
     overflow: hidden;
     img{
-      width: 50px;
-      height: 50px;
+      width: ${props => props.size};
+      height: ${props => props.size};
     }
 `
 
-export default function Logo({ image }) {
+export default function Logo({ image, size }) {
   return (
-    <LogoStyle>
+    <LogoStyle size={size}>
       {image === undefined ? null :<Image
         alt="user logo"
         src={require(`../../../server/images/${image}`)}/>}

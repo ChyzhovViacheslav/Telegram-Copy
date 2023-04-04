@@ -10,6 +10,7 @@ const App = styled.div`
   width: 100vw;
   height: 100vh;
   background-color: var(--surface-color);
+  overflow: hidden;
 `
 
 export default function Index() {

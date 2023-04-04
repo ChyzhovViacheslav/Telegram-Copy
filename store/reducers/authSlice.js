@@ -21,7 +21,7 @@ export const authSlice = createSlice({
             state.image = action.payload.image
             state.id = action.payload.id
         },
-        removeUser(state, action){
+        removeUser(state){
             state.email = null
             state.username = null
             state.image = null
@@ -32,7 +32,7 @@ export const authSlice = createSlice({
             state.expiresAt = action.payload.expiresAt
             state.refreshToken = action.payload.refreshToken
         },
-        removeToken(state, action){
+        removeToken(state){
             state.accessToken = null
             state.expiresAt = null
             state.refreshToken = null

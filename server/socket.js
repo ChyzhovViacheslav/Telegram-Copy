@@ -2,11 +2,9 @@ const Message = require("./models/Message");
 
 function initSocket(io) {
     io.on('connection', socket => {
-        console.log('user connected');
 
         socket.on('joinRoom', ({room_id}) => {
             socket.join(room_id);
-            console.log(`User ${socket.id} joined room`);
         });
 
         socket.on('sendMessage', async ({ text, room_id, user_id }) => {
@@ -21,14 +19,18 @@ function initSocket(io) {
             io.to(room_id).emit('newMessage', message);
         });
 
-        socket.on('getMessages', async ({ room_id }) => {
-            const messages = await Message.find({ room: room_id })
+        socket.on('getMessages', async ({ room_id, limit = 50 }) => {
+            const allMessages = await Message.countDocuments({room: room_id})
+            const messages = await Message
+                .find({ room: room_id })
+                .skip(allMessages <= limit ? 0 : allMessages - limit)
+                .limit(limit)
 
             socket.emit('allMessages', messages)
         })
 
         socket.on('disconnect', () => {
-            console.log('user disconnected');
+            
         });
     });
 }

@@ -5,11 +5,11 @@ import useAuth from '../../hooks/useAuth'
 import { authUser } from '../../services/AuthUser'
 import { roomService } from '../../services/RoomService'
 import Logo from '../interface/logo/Logo'
-import { changeCurrentRoom } from '../../store/reducers/roomSlice'
+import { changeCurrentRoom, changeCurrentUser } from '../../store/reducers/roomSlice'
 
 const UserWrapper = styled.div`
     display: flex;
-    column-gap: 15px;
+    column-gap: 5px;
     align-items: center;
     padding: 10px 15px;
     cursor: pointer;
@@ -52,16 +52,17 @@ export default function User({ roomId }) {
 
   const openRoomHandler = () => {
     dispatch(changeCurrentRoom(roomId))
+    dispatch(changeCurrentUser(user))
   }
 
   return (
     <UserWrapper
       current={roomId === currentRoom}
-      onClick={() => openRoomHandler()}
+      onClick={openRoomHandler}
       onContextMenu={(e) => e.preventDefault()}>
       {user && !messageIsLoading ?
         <>
-          <Logo image={user?.image} />
+          <Logo image={user?.image} size={'54px'} />
           <Container current={roomId === currentRoom}>
             <h2>{user?.username}</h2>
             {lastMessage.message.length >= 65 ?

@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import InputSearch from '../interface/inputsearch/InputSearch'
 import SettingsModal from '../modals/SettingsModal/SettingsModal'
+import { useAppDispatch } from '../../hooks/redux'
+import { removeToken, removeUser } from '../../store/reducers/authSlice'
 
 const Container = styled.div`
   display: flex;
@@ -46,19 +48,22 @@ const SettingsBtn = styled.div`
 
 export default function Search() {
   const [modalIsActive, setModalIsActive] = useState(false)
-  
+  const dispatch = useAppDispatch()
+
+  const logoutHandler = () => {
+    dispatch(removeToken())
+    dispatch(removeUser())
+  }
+
   return (
     <Container>
-        <SettingsBtn onClick={() => {setModalIsActive(!modalIsActive)}}>
-          <span></span>
-        </SettingsBtn>
-        <InputSearch/>
-        <SettingsModal open={modalIsActive}>
-          <h1>Loasdasdasdasdasdl</h1>
-          <h1>Lol</h1>
-          <h1>Lol</h1>
-          <h1>Lol</h1>
-        </SettingsModal>
+      <SettingsBtn onClick={() => { setModalIsActive(!modalIsActive) }}>
+        <span></span>
+      </SettingsBtn>
+      <InputSearch />
+      <SettingsModal open={modalIsActive}>
+        <h1 onClick={logoutHandler}>logout</h1>
+      </SettingsModal>
     </Container>
   )
 }

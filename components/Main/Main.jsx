@@ -4,6 +4,12 @@ import Room from '../Room/Room'
 import Search from '../Serach/Search'
 import Users from '../Users/Users'
 
+const MainWrapper = styled.div`
+    display: flex;
+    height: 100%;
+    background-color: rgb(18, 25, 37);
+`
+
 const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -11,12 +17,6 @@ const Container = styled.div`
     height: 100%;
     width: 500px;
     flex-shrink: 0;
-`
-
-const MainWrapper = styled.div`
-    display: inline-flex;
-    height: 100%;
-    background-color: rgb(18, 25, 37);
 `
 
 export default function Main() {

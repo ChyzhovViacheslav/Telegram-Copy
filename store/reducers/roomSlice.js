@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit"
 
 const initialState = {
-    currentRoom: null
+    currentRoom: null,
+    currentUser: null
 }
 
 export const roomSlice = createSlice({
@@ -11,8 +12,11 @@ export const roomSlice = createSlice({
         changeCurrentRoom(state, action){
             state.currentRoom = action.payload
         },
+        changeCurrentUser(state, action){
+            state.currentUser = action.payload
+        }
     }
 })
 
-export const {changeCurrentRoom} = roomSlice.actions
+export const {changeCurrentRoom, changeCurrentUser} = roomSlice.actions
 export default roomSlice.reducer
