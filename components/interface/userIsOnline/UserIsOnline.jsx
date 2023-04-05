@@ -10,7 +10,7 @@ const LastActives = styled.span`
 export default function UserIsOnline({ userId, lastActive }) {
     const [userLastActive, setUserLastActive] = useState(null)
 
-    useEffect(() => {
+    const userLastActiveHandler = () => {
         if (lastActive === null) {
             setUserLastActive('online')
         } else {
@@ -18,22 +18,19 @@ export default function UserIsOnline({ userId, lastActive }) {
             const diffInSeconds = Math.floor((currentDate - lastActive) / 1000)
             setUserLastActive(diffInSeconds)
         }
+    }
 
+    useEffect(() => {
+        userLastActiveHandler()
         const interval = setInterval(() => {
-            if (lastActive === null) {
-                setUserLastActive('online')
-            } else {
-                const currentDate = new Date()
-                const diffInSeconds = Math.floor((currentDate - lastActive) / 1000)
-                setUserLastActive(diffInSeconds)
-            }
+            userLastActiveHandler()
         }, 1000);
         return () => clearInterval(interval);
     }, [userId, lastActive])
 
     const renderLastActive = () => {
         if (userLastActive === 'online') {
-            return 'online'
+            return userLastActive
         } else if (userLastActive < 60) {
             return "был(а) в сети только что";
         } else if (userLastActive < 120) {

@@ -7,6 +7,7 @@ import InputMessage from '../interface/inputMessage/InputMessage'
 import IconSelector from '../../assets/icons/icons'
 import Logo from '../interface/logo/Logo'
 import UserIsOnline from '../interface/userIsOnline/UserIsOnline'
+import { LocaleRouteMatcher } from 'next/dist/server/future/route-matchers/locale-route-matcher'
 
 const RoomWrapper = styled.div`
     display: flex;
@@ -24,6 +25,7 @@ const RoomInfo = styled.div`
     width: 100%;
     background-color: var(--surface-color);
     padding-left: 20px;
+    cursor: pointer;
 `
 
 const UserInfo = styled.div`
@@ -74,7 +76,6 @@ const MessagesWrapper = styled.div`
         border-radius: 8px;
     }
 `
-
 const MessageWrapper = styled.div`
     display: flex;
     align-items: center;
@@ -100,8 +101,9 @@ const MessageWrapper = styled.div`
 const Message = styled.div`
     display: flex;
     align-items: flex-end;
-    padding: 6px 8px;
+    padding: 8px 10px;
     border-radius: 8px;
+    max-width: 480px;
     p{
         font-size: 16px;
     }
@@ -163,7 +165,7 @@ export default function Room() {
     const [allMessages, setAllMessages] = useState([])
     const [userLastActive, setUserLastActive] = useState(false)
     const [messageLimit, setMessageLimit] = useState(50)
-    
+
     const messagesRef = useRef(null)
 
     const { currentRoom, currentUser } = useAppSelector(state => state.roomSlice)
@@ -173,7 +175,7 @@ export default function Room() {
 
         socket.emit('getMessages', { room_id: currentRoom, limit: messageLimit })
 
-        socket.emit('getLastActive', {user_id: currentUser})
+        socket.emit('getLastActive', { user_id: currentUser })
 
         socket.on('onlineUser', (data) => {
             setUserLastActive(new Date(data))
@@ -203,6 +205,17 @@ export default function Room() {
         }
     }, [roomIsLoading])
 
+    useEffect(() => {
+        if (messagesRef.current) {
+            if(messagesRef.current.scrollTop <= messagesRef.current.scrollHeight - 1000){
+                
+            } else {
+                messagesRef.current.scrollTop = messagesRef.current.scrollHeight
+            }
+        }
+    }, [allMessages])
+
+
     const sendMessageHandler = (e) => {
         e.preventDefault()
         socket.emit('sendMessage', {
@@ -216,7 +229,7 @@ export default function Room() {
     const scrollHandler = (e) => {
         const { scrollTop } = e.target;
 
-        if (scrollTop <= 100 && !fetchingMessages) {
+        if (scrollTop <= 500 && !fetchingMessages) {
             setFetchingMessages(true)
             const newMessageLimit = messageLimit + 50
 
@@ -244,7 +257,7 @@ export default function Room() {
                         return 'first-user'
                     case 'system':
                         return 'system'
-                    default: 
+                    default:
                         return 'second-user'
                 }
             }
@@ -261,10 +274,10 @@ export default function Room() {
     return (
         <RoomWrapper>
             <RoomInfo>
-                <Logo image={currentUser.image} size={'42px'}/>
+                <Logo image={currentUser.image} size={'42px'} />
                 <UserInfo>
                     <h1>{currentUser.username}</h1>
-                    {userLastActive === false ? <span>loading...</span> : <UserIsOnline userId={currentUser} lastActive={userLastActive}/>}
+                    {userLastActive === false ? <span>loading...</span> : <UserIsOnline userId={currentUser} lastActive={userLastActive} />}
                 </UserInfo>
             </RoomInfo>
             <ContainerControllers>

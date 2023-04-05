@@ -9,7 +9,7 @@ import { changeCurrentRoom, changeCurrentUser } from '../../store/reducers/roomS
 
 const UserWrapper = styled.div`
     display: flex;
-    column-gap: 5px;
+    column-gap: 8px;
     align-items: center;
     padding: 10px 15px;
     cursor: pointer;
@@ -27,7 +27,7 @@ const Container = styled.div`
     height: 100%;
     h2{
       font-size: 16px;
-      font-weight: 400;
+      font-weight: 500;
     }
     p{
       color: ${props => props.current ? 'var(--primary-text-color)' : 'var(--secondary-text-color)'};
@@ -65,8 +65,8 @@ export default function User({ roomId }) {
           <Logo image={user?.image} size={'54px'} />
           <Container current={roomId === currentRoom}>
             <h2>{user?.username}</h2>
-            {lastMessage.message.length >= 65 ?
-              <p>{lastMessage.message.slice(0, 65)}...</p>
+            {lastMessage.message.length >= 60 ?
+              <p>{lastMessage.message.slice(0, 60)}...</p>
               :
               <p>{lastMessage.message}</p>}
           </Container>

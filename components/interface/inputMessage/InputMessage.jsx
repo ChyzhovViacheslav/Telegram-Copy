@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import IconSelector from '../../../assets/icons/icons'
 
@@ -46,14 +46,18 @@ const InputMessageWrapper = styled.div`
     }
 `
 
-export default function InputMessage({ value, setMessage, sendMessage }) {
+export default function InputMessage({ value, setMessage }) {
+    const setMessageHandler = (e) => {
+        setMessage(e.target.value)
+    }
+
     return (
         <InputWrapper>
             <InputMessageWrapper empty={value.length}>
                 <Input
+                    type={'text'}
                     value={value}
-                    onChange={(e) => setMessage(e.target.value)}
-                    type='text' />
+                    onChange={setMessageHandler}/>
             </InputMessageWrapper>
         </InputWrapper>
     )

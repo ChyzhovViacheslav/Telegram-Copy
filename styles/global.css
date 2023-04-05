@@ -8,6 +8,7 @@ h2,
 h3,
 h4,
 input,
+div,
 ::after{
     color: var(--primary-text-color);
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell,

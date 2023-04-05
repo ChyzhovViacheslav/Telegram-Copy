@@ -5,6 +5,8 @@ import Search from '../Serach/Search'
 import Users from '../Users/Users'
 import { io } from 'socket.io-client'
 import useAuth from '../../hooks/useAuth'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { changeCurrentRoom } from '../../store/reducers/roomSlice'
 
 const MainWrapper = styled.div`
     display: flex;
@@ -21,14 +23,32 @@ const Container = styled.div`
     flex-shrink: 0;
 `
 
+const EmptyRoom = styled.div`
+    height: 100%;
+    width: 100%;
+    background-color: var(--body-background-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    span{
+        border-radius: 16px;
+        padding: 6px 12px;
+        font-size: 16px;
+        background-color: var(--opacity-primary-text-color);
+    }
+`
+
 export default function Main() {
+    const {currentRoom} = useAppSelector(state => state.roomSlice)
+    const dispatch = useAppDispatch()
     const { id } = useAuth()
     const socket = io('http://localhost:2000')
 
     useEffect(() => {
         socket.emit('setOnline', {user_id: id})
         return () => {
-            console.log('disconnected')
+            dispatch(changeCurrentRoom(null))
             socket.emit('setOffline', {user_id: id})
         }
     }, [])
@@ -39,7 +59,7 @@ export default function Main() {
                 <Search />
                 <Users />
             </Container>
-            <Room />
+            {currentRoom ? <Room /> : <EmptyRoom><span>Select a chat from the list</span></EmptyRoom>}
         </MainWrapper>
     )
 }
