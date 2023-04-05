@@ -6,6 +6,7 @@ import useAuth from '../../hooks/useAuth'
 import InputMessage from '../interface/inputMessage/InputMessage'
 import IconSelector from '../../assets/icons/icons'
 import Logo from '../interface/logo/Logo'
+import UserIsOnline from '../interface/userIsOnline/UserIsOnline'
 
 const RoomWrapper = styled.div`
     display: flex;
@@ -34,11 +35,6 @@ const UserInfo = styled.div`
     }
     h1{
         font-size: 16px;
-    }
-    span{
-        margin-top: 2px;
-        font-size: 14px;
-        color: var(--dark-primary-color);
     }
 `
 
@@ -165,6 +161,7 @@ export default function Room() {
     const [fetchingMessages, setFetchingMessages] = useState(false);
     const [message, setMessage] = useState('')
     const [allMessages, setAllMessages] = useState([])
+    const [userLastActive, setUserLastActive] = useState(false)
     const [messageLimit, setMessageLimit] = useState(50)
     
     const messagesRef = useRef(null)
@@ -175,6 +172,12 @@ export default function Room() {
         socket.emit('joinRoom', { room_id: currentRoom })
 
         socket.emit('getMessages', { room_id: currentRoom, limit: messageLimit })
+
+        socket.emit('getLastActive', {user_id: currentUser})
+
+        socket.on('onlineUser', (data) => {
+            setUserLastActive(new Date(data))
+        })
 
         socket.on('allMessages', (data) => {
             setAllMessages(data)
@@ -187,19 +190,18 @@ export default function Room() {
         })
 
         return () => {
-            socket.off('joinRoom')
-            socket.off('getMessages')
+            socket.off('onlineUser')
+            socket.off('allMessages')
+            socket.off('newMessage')
             setRoomIsLoading(true)
         }
     }, [currentRoom])
-
 
     useEffect(() => {
         if (!roomIsLoading) {
             messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
         }
     }, [roomIsLoading])
-
 
     const sendMessageHandler = (e) => {
         e.preventDefault()
@@ -262,7 +264,7 @@ export default function Room() {
                 <Logo image={currentUser.image} size={'42px'}/>
                 <UserInfo>
                     <h1>{currentUser.username}</h1>
-                    <span>online</span>
+                    {userLastActive === false ? <span>loading...</span> : <UserIsOnline userId={currentUser} lastActive={userLastActive}/>}
                 </UserInfo>
             </RoomInfo>
             <ContainerControllers>

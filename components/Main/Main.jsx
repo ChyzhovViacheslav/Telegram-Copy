@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import Room from '../Room/Room'
 import Search from '../Serach/Search'
 import Users from '../Users/Users'
+import { io } from 'socket.io-client'
+import useAuth from '../../hooks/useAuth'
 
 const MainWrapper = styled.div`
     display: flex;
@@ -20,6 +22,16 @@ const Container = styled.div`
 `
 
 export default function Main() {
+    const { id } = useAuth()
+    const socket = io('http://localhost:2000')
+
+    useEffect(() => {
+        socket.emit('setOnline', {user_id: id})
+        return () => {
+            console.log('disconnected')
+            socket.emit('setOffline', {user_id: id})
+        }
+    }, [])
 
     return (
         <MainWrapper>
@@ -27,7 +39,7 @@ export default function Main() {
                 <Search />
                 <Users />
             </Container>
-            <Room/>
+            <Room />
         </MainWrapper>
     )
 }
