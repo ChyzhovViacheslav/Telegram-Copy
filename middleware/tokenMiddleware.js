@@ -9,18 +9,18 @@ const getNewAccessToken = async () => {
         },
         credentials: 'include'
     })
-    const data = await response.json()
 
-    return data
+    const token = await response.json()
+
+    return token
 }
 
 export const tokenMiddleware = (store) => (next) => async (action) => {
     const state = store.getState();
     const expiresAt = state.authSlice.expiresAt;
     const now = Date.now()
-    if (now > Date.parse(expiresAt) && expiresAt !== null) {
-        console.log('getting new token')
 
+    if (now > Date.parse(expiresAt) && expiresAt !== null) {
         const newToken = await getNewAccessToken();
         store.dispatch(setToken(newToken));
     }

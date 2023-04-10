@@ -57,11 +57,14 @@ export default function Search() {
 
   return (
     <Container>
-      <SettingsBtn onClick={() => { setModalIsActive(!modalIsActive) }}>
+      <SettingsBtn 
+        onClick={() => { setModalIsActive(!modalIsActive) }}>
         <span></span>
       </SettingsBtn>
       <InputSearch />
-      <SettingsModal open={modalIsActive}>
+      <SettingsModal
+        setOpen={setModalIsActive} 
+        open={modalIsActive}>
         <h1 onClick={logoutHandler}>logout</h1>
       </SettingsModal>
     </Container>

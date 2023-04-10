@@ -7,14 +7,21 @@ import InputMessage from '../interface/inputMessage/InputMessage'
 import IconSelector from '../../assets/icons/icons'
 import Logo from '../interface/logo/Logo'
 import UserIsOnline from '../interface/userIsOnline/UserIsOnline'
-import { LocaleRouteMatcher } from 'next/dist/server/future/route-matchers/locale-route-matcher'
+import SidebarUserInfo from '../SidebarUserInfo/SidebarUserInfo'
+
+const Wrapper = styled.div`
+    display: flex;
+    width: 100%;
+`
 
 const RoomWrapper = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
+    flex-shrink: ${props => props.userInfoOpen ? '1' : '0'};
     background-color: var(--body-background-color);
+    transition: all 0.3s ease-in-out;
 `
 
 const RoomInfo = styled.div`
@@ -45,9 +52,9 @@ const ContainerControllers = styled.div`
     height: 100%;
     overflow: hidden;
     width: 782px;
-    margin: 0 auto;
     align-items: flex-end;
     margin-bottom: 20px;
+    margin: 0 auto;
 `
 
 const Container = styled.div`
@@ -159,6 +166,7 @@ export default function Room() {
 
     const { id } = useAuth()
 
+    const [sidebarIsOpen, setSidebarIsOpen] = useState(false)
     const [roomIsLoading, setRoomIsLoading] = useState(true)
     const [fetchingMessages, setFetchingMessages] = useState(false);
     const [message, setMessage] = useState('')
@@ -207,8 +215,8 @@ export default function Room() {
 
     useEffect(() => {
         if (messagesRef.current) {
-            if(messagesRef.current.scrollTop <= messagesRef.current.scrollHeight - 1000){
-                
+            if (messagesRef.current.scrollTop <= messagesRef.current.scrollHeight - 1000) {
+
             } else {
                 messagesRef.current.scrollTop = messagesRef.current.scrollHeight
             }
@@ -272,29 +280,34 @@ export default function Room() {
     }
 
     return (
-        <RoomWrapper>
-            <RoomInfo>
-                <Logo image={currentUser.image} size={'42px'} />
-                <UserInfo>
-                    <h1>{currentUser.username}</h1>
-                    {userLastActive === false ? <span>loading...</span> : <UserIsOnline userId={currentUser} lastActive={userLastActive} />}
-                </UserInfo>
-            </RoomInfo>
-            <ContainerControllers>
-                <Container>
-                    <MessagesWrapper
-                        ref={messagesRef}
-                        onScroll={scrollHandler}>
-                        {renderAllMessages()}
-                    </MessagesWrapper>
-                    <InputMessage
-                        value={message}
-                        setMessage={setMessage} />
-                </Container>
-                <Button onClick={sendMessageHandler} >
-                    <IconSelector id={'send'} color='#fff' />
-                </Button>
-            </ContainerControllers >
-        </RoomWrapper>
+        <Wrapper>
+            <RoomWrapper userInfoOpen={sidebarIsOpen}>
+                <RoomInfo onClick={() => setSidebarIsOpen(true)}>
+                    <Logo image={currentUser.image} size={'42px'} />
+                    <UserInfo>
+                        <h1>{currentUser.username}</h1>
+                        {userLastActive === false ? <span>loading...</span> : <UserIsOnline userId={currentUser} lastActive={userLastActive} />}
+                    </UserInfo>
+                </RoomInfo>
+                <ContainerControllers>
+                    <Container>
+                        <MessagesWrapper
+                            ref={messagesRef}
+                            onScroll={scrollHandler}>
+                            {renderAllMessages()}
+                        </MessagesWrapper>
+                        <InputMessage
+                            value={message}
+                            setMessage={setMessage} />
+                    </Container>
+                    <Button onClick={sendMessageHandler} >
+                        <IconSelector id={'send'} color='#fff' />
+                    </Button>
+                </ContainerControllers >
+            </RoomWrapper>
+            <SidebarUserInfo
+                isOpen={sidebarIsOpen}
+                setIsOpen={setSidebarIsOpen}/>
+        </Wrapper>
     )
 }

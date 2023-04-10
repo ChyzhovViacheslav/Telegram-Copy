@@ -7,6 +7,7 @@ import { io } from 'socket.io-client'
 import useAuth from '../../hooks/useAuth'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { changeCurrentRoom } from '../../store/reducers/roomSlice'
+import SidebarUserInfo from '../SidebarUserInfo/SidebarUserInfo'
 
 const MainWrapper = styled.div`
     display: flex;
