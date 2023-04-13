@@ -53,7 +53,7 @@ const ContainerControllers = styled.div`
     overflow: hidden;
     width: 782px;
     align-items: flex-end;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
     margin: 0 auto;
 `
 
@@ -306,6 +306,8 @@ export default function Room() {
                 </ContainerControllers >
             </RoomWrapper>
             <SidebarUserInfo
+                userLastActive={userLastActive}
+                user={currentUser}
                 isOpen={sidebarIsOpen}
                 setIsOpen={setSidebarIsOpen}/>
         </Wrapper>

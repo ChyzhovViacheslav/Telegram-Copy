@@ -1,43 +1,9 @@
 const User = require('../models/User')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const { validationResult } = require('express-validator')
 const tokenService = require('../service/token-service')
 const UserDto = require('../dtos/user-dto.js')
-const fs = require('fs')
-const path = require('path')
-const { createCanvas } = require('canvas')
-
-const createLogo = (username) => {
-    const imageName = `${Date.now()}.png`
-
-    const backgroundColor = [
-        '#C98BB9',
-        '#7293DC',
-        '#b7bf73',
-        '#73DEC9',
-        '#E0C08D',
-        '#BBD3FC',
-        '#96e3c8'
-    ]
-
-    const randomNum = Math.floor(Math.random() * (backgroundColor.length - 0) + 0)
-
-    const canvas = createCanvas(200, 200)
-    const context = canvas.getContext('2d')
-
-    context.fillStyle = backgroundColor[randomNum];
-    context.fillRect(0, 0, 200, 200);
-
-    context.font = "regular 100pt 'PT Sans'"
-    context.textAlign = 'center'
-    context.fillStyle = '#fff'
-    context.fillText(username[0].toUpperCase(), 100, 150)
-
-    const buffer = canvas.toBuffer('image/png')
-    fs.writeFileSync(path.resolve('server', 'images', imageName), buffer)
-    return imageName
-}
+const { createLogo } = require('../service/create-logo-service')
 
 class usersController {
     async registration(req, res) {

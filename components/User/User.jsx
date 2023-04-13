@@ -6,8 +6,10 @@ import { authUser } from '../../services/AuthUser'
 import { roomService } from '../../services/RoomService'
 import Logo from '../interface/logo/Logo'
 import { changeCurrentRoom, changeCurrentUser } from '../../store/reducers/roomSlice'
+import Ripple from '../interface/ripple/Ripple'
 
 const UserWrapper = styled.div`
+    position: relative;
     display: flex;
     column-gap: 8px;
     align-items: center;
@@ -16,7 +18,7 @@ const UserWrapper = styled.div`
     background-color: ${props => props.current ? 'var(--primary-color)' : 'none'} !important;
     &:hover{
       background-color: #a1a1a114;
-    }
+    };
 `
 
 const Container = styled.div`
@@ -70,6 +72,7 @@ export default function User({ roomId }) {
               :
               <p>{lastMessage.message}</p>}
           </Container>
+          <Ripple />
         </>
         : <h1>Load...</h1>}
     </UserWrapper>
