@@ -6,10 +6,12 @@ import { authUser } from "../services/AuthUser";
 import { roomService } from "../services/RoomService";
 import authSlice from "./reducers/authSlice";
 import roomSlice from './reducers/roomSlice';
+import modalsSlice from "./reducers/modalsSlice";
 
 const rootReducer = combineReducers({
     authSlice,
     roomSlice,
+    modalsSlice,
     [authUser.reducerPath]: authUser.reducer,
     [roomService.reducerPath]: roomService.reducer
 })

@@ -4,6 +4,8 @@ import styled from 'styled-components'
 import UserIsOnline from '../interface/userIsOnline/UserIsOnline'
 import IconSelector from '../../assets/icons/icons'
 import Ripple from '../interface/ripple/Ripple'
+import { openNotification, setCopyNotification } from '../../store/reducers/modalsSlice'
+import { useAppDispatch } from '../../hooks/redux'
 
 const Wrapper = styled.div`
     display: flex;
@@ -31,6 +33,7 @@ const CloseBtn = styled.div`
     height: 44px;
     position: relative;
     cursor: pointer;
+    border-radius: 50%;
     &::after,&::before{
         content: '';
         position: absolute;
@@ -46,6 +49,9 @@ const CloseBtn = styled.div`
     }
     &::before{
         transform: translate(-50%, -50%) rotate(-45deg);
+    }
+    &:hover{
+        background-color: var(--input-search-border-color);
     }
 `
 
@@ -125,7 +131,11 @@ const UserInfoWrapper = styled.div`
 `
 
 export default function SidebarUserInfo({ isOpen, setIsOpen, user, userLastActive }) {
+    const dispatch = useAppDispatch()
+
     const copyHandler = (text) => {
+        dispatch(setCopyNotification())
+        dispatch(openNotification())
         navigator.clipboard.writeText(text)
     }
 

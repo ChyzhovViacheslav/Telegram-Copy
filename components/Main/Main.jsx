@@ -7,7 +7,7 @@ import { io } from 'socket.io-client'
 import useAuth from '../../hooks/useAuth'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { changeCurrentRoom } from '../../store/reducers/roomSlice'
-import SidebarUserInfo from '../SidebarUserInfo/SidebarUserInfo'
+import Notification from '../modals/Notification/Notification'
 
 const MainWrapper = styled.div`
     display: flex;
@@ -41,16 +41,16 @@ const EmptyRoom = styled.div`
 `
 
 export default function Main() {
-    const {currentRoom} = useAppSelector(state => state.roomSlice)
+    const { currentRoom } = useAppSelector(state => state.roomSlice)
     const dispatch = useAppDispatch()
     const { id } = useAuth()
     const socket = io('http://localhost:2000')
 
     useEffect(() => {
-        socket.emit('setOnline', {user_id: id})
+        socket.emit('setOnline', { user_id: id })
         return () => {
             dispatch(changeCurrentRoom(null))
-            socket.emit('setOffline', {user_id: id})
+            socket.emit('setOffline', { user_id: id })
         }
     }, [])
 
@@ -61,6 +61,7 @@ export default function Main() {
                 <Users />
             </Container>
             {currentRoom ? <Room /> : <EmptyRoom><span>Select a chat from the list</span></EmptyRoom>}
+            <Notification/>
         </MainWrapper>
     )
 }
