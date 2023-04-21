@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import styled from 'styled-components'
 import InputSearch from '../interface/inputsearch/InputSearch'
 import SettingsModal from '../modals/SettingsModal/SettingsModal'
 import { useAppDispatch } from '../../hooks/redux'
 import { removeToken, removeUser } from '../../store/reducers/authSlice'
+import { useEffect } from 'react'
+import IconSelector from '../../assets/icons/icons'
 
 const Container = styled.div`
   display: flex;
@@ -46,26 +48,40 @@ const SettingsBtn = styled.div`
   }
 `
 
-export default function Search() {
+export default function Search({setSettingsIsOpen}) {
+  const btnRef = useRef(null)
+  const [btnLocation, setBtnLocation] = useState(null)
   const [modalIsActive, setModalIsActive] = useState(false)
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    const locations = btnRef.current.getBoundingClientRect()
+    setBtnLocation({ x: locations.x, y: locations.y })
+  }, [])
 
   const logoutHandler = () => {
     dispatch(removeToken())
     dispatch(removeUser())
   }
 
+  const settingsHandler = () => {
+    setSettingsIsOpen(true)
+  }
+
   return (
     <Container>
-      <SettingsBtn 
+      <SettingsBtn
+        ref={btnRef}
         onClick={() => { setModalIsActive(!modalIsActive) }}>
         <span></span>
       </SettingsBtn>
       <InputSearch />
       <SettingsModal
-        setOpen={setModalIsActive} 
+        location={btnLocation}
+        setOpen={setModalIsActive}
         open={modalIsActive}>
-        <h1 onClick={logoutHandler}>logout</h1>
+          <div onClick={settingsHandler}><IconSelector id={'settings'} color={'#fff'}/><span>Settings</span></div>
+          <div onClick={logoutHandler}><IconSelector id={'logout'} color={'#fff'}/><span>Log Out</span></div>
       </SettingsModal>
     </Container>
   )

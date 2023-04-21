@@ -113,6 +113,7 @@ const Message = styled.div`
     max-width: 480px;
     p{
         font-size: 16px;
+        line-height: 120%;
     }
     span{
         margin-left: 5px;
@@ -150,7 +151,6 @@ const Button = styled.button`
     height: 54px;
     border-radius: 100%;
     background-color: var(--primary-color);
-    margin-left: 15px;
     flex-shrink: 0;
     padding-left: 4px;
     &:hover{
@@ -159,6 +159,33 @@ const Button = styled.button`
     svg{
         transform: scale(1.2);
     }
+`
+
+const ScrollButton = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background-color: var(--surface-color);
+    cursor: pointer;
+    opacity: ${props => props.show ? '1' : '0'};
+    pointer-events: ${props => props.show ? 'all' : 'none'};
+    svg{
+        width: 42px;
+        height: 42px;
+    }
+    &:hover{
+        background-color: var(--input-search-border-color);
+    }
+`
+
+const ControllersWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+    row-gap: 15px;
 `
 
 export default function Room() {
@@ -173,6 +200,7 @@ export default function Room() {
     const [allMessages, setAllMessages] = useState([])
     const [userLastActive, setUserLastActive] = useState(false)
     const [messageLimit, setMessageLimit] = useState(50)
+    const [showScrollBtn, setShowScrollBtn] = useState(false)
 
     const messagesRef = useRef(null)
 
@@ -216,13 +244,12 @@ export default function Room() {
     useEffect(() => {
         if (messagesRef.current) {
             if (messagesRef.current.scrollTop <= messagesRef.current.scrollHeight - 1000) {
-
+                setShowScrollBtn(true)
             } else {
                 messagesRef.current.scrollTop = messagesRef.current.scrollHeight
             }
         }
     }, [allMessages])
-
 
     const sendMessageHandler = (e) => {
         e.preventDefault()
@@ -235,8 +262,8 @@ export default function Room() {
     }
 
     const scrollHandler = (e) => {
-        const { scrollTop } = e.target;
-
+        const { scrollTop, scrollHeight } = e.target;
+        
         if (scrollTop <= 500 && !fetchingMessages) {
             setFetchingMessages(true)
             const newMessageLimit = messageLimit + 50
@@ -251,6 +278,16 @@ export default function Room() {
                 setFetchingMessages(false)
             })
         }
+       
+        if((scrollTop - 500) > scrollHeight){
+            setShowScrollBtn(true)
+        } else if((scrollHeight - 1500) < scrollTop) {
+            setShowScrollBtn(false) 
+        }
+    }
+
+    const scrollDownHandler = () => {
+        messagesRef.current.scrollTop = messagesRef.current.scrollHeight
     }
 
     const renderAllMessages = () => {
@@ -283,7 +320,7 @@ export default function Room() {
         <Wrapper>
             <RoomWrapper userInfoOpen={sidebarIsOpen}>
                 <RoomInfo onClick={() => setSidebarIsOpen(true)}>
-                    <Logo image={currentUser.image} size={'42px'} />
+                    <Logo image={currentUser.images[0]} size={'42px'} />
                     <UserInfo>
                         <h1>{currentUser.username}</h1>
                         {userLastActive === false ? <span>loading...</span> : <UserIsOnline userId={currentUser} lastActive={userLastActive} />}
@@ -300,16 +337,21 @@ export default function Room() {
                             value={message}
                             setMessage={setMessage} />
                     </Container>
-                    <Button onClick={sendMessageHandler} >
-                        <IconSelector id={'send'} color='#fff' />
-                    </Button>
+                    <ControllersWrapper>
+                        <ScrollButton show={showScrollBtn} onClick={scrollDownHandler}>
+                            <IconSelector id={'arrow-down'} color='#fff' />
+                        </ScrollButton>
+                        <Button onClick={sendMessageHandler} >
+                            <IconSelector id={'send'} color='#fff' />
+                        </Button>
+                    </ControllersWrapper>
                 </ContainerControllers >
             </RoomWrapper>
             <SidebarUserInfo
                 userLastActive={userLastActive}
                 user={currentUser}
                 isOpen={sidebarIsOpen}
-                setIsOpen={setSidebarIsOpen}/>
+                setIsOpen={setSidebarIsOpen} />
         </Wrapper>
     )
 }

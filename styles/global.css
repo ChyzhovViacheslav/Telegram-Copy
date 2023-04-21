@@ -15,13 +15,18 @@ div,
         "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-h1 {
-    font-size: 2rem;
-    line-height: 110%;
+h1,h2,h3,h4{
+    line-height: 120%;
+}
+
+h3{
+    font-size: 16px;
+    color: var(--gray-text-color);
 }
 
 :root {
     --body-background-color: #181818;
+    --body-background-secondary-color: rgb(15,15,15);
     --surface-color: #212121;
     --primary-color: #8774e1;
     --secondary-text-color: #aaaaaa;
@@ -32,4 +37,6 @@ h1 {
     --danger-color: #ff595a;
     --dark-danger-color: hsl(359.639, 100%, 59.451%);
     --input-search-border-color: #2f2f2f;
+    --input-search-border-secondary-color: #525252;
+    --default-shadow-color: rgba(16,16,16,0.611765);
 }

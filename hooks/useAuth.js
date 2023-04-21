@@ -1,14 +1,28 @@
 import { useAppSelector } from "./redux";
 
-export default function useAuth(){
-    const {email, id, username, image, accessToken, expiresAt} = useAppSelector(state => state.authSlice)
+export default function useAuth() {
+    const {
+        email,
+        id,
+        username,
+        images,
+        accessToken,
+        expiresAt,
+        firstname,
+        lastname,
+        bio 
+    } = useAppSelector(state => state.authSlice)
+
     return {
         isAuth: !!email,
         email,
         id,
         username,
-        image,
+        images,
         accessToken,
-        expiresAt
+        expiresAt,
+        firstname,
+        lastname,
+        bio
     }
 }

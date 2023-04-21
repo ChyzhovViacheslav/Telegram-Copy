@@ -7,6 +7,7 @@ import { roomService } from "../services/RoomService";
 import authSlice from "./reducers/authSlice";
 import roomSlice from './reducers/roomSlice';
 import modalsSlice from "./reducers/modalsSlice";
+import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
     authSlice,
@@ -28,7 +29,7 @@ export const setupStore = () => {
     return configureStore({
         reducer: persistedReducer,
         middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false })
-            .concat(authUser.middleware, roomService.middleware, tokenMiddleware)
+            .concat(thunk, authUser.middleware, roomService.middleware, tokenMiddleware)
     })
 }
 

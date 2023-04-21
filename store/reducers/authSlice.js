@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { roomService } from "../../services/RoomService"
 
 const initialState = {
     email: null,
     username: null,
-    image: null,
+    images: null,
     id: null,
     accessToken: null,
     refreshToken: null,
-    expiresAt: null
+    expiresAt: null,
+    firstname: null,
+    lastname: null,
+    bio: null
 }
 
 export const authSlice = createSlice({
@@ -18,14 +20,20 @@ export const authSlice = createSlice({
         setUser(state, action){
             state.email = action.payload.email
             state.username = action.payload.username
-            state.image = action.payload.image
+            state.images = action.payload.images
             state.id = action.payload.id
+            state.firstname = action.payload.firstname
+            state.lastname = action.payload.lastname
+            state.bio = action.payload.bio
         },
         removeUser(state){
             state.email = null
             state.username = null
-            state.image = null
+            state.images = null
             state.id = null
+            state.firstname = null
+            state.lastname = null
+            state.bio = null
         },
         setToken(state, action){
             state.accessToken = action.payload.accessToken
@@ -36,8 +44,17 @@ export const authSlice = createSlice({
             state.accessToken = null
             state.expiresAt = null
             state.refreshToken = null
+        },
+        setUserImage(state, action){
+            state.images = [action.payload, ...state.images]
+        },
+        setUserInfo(state, action){
+            state.username = action.payload.username
+            state.firstname = action.payload.firstname
+            state.lastname = action.payload.lastname
+            state.bio = action.payload.bio
         }
     }
 })
-export const {setUser, removeUser, setToken, removeToken} = authSlice.actions
+export const {setUser, removeUser, setToken, removeToken, setUserImage, setUserInfo} = authSlice.actions
 export default authSlice.reducer

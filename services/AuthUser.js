@@ -43,9 +43,24 @@ export const authUser = createApi({
             })
         }),
         getOneUser: build.query({
-            query: ({id}) => ({
+            query: ({ id }) => ({
                 url: `/user/${id}`,
                 method: 'GET',
+            })
+        }),
+        changeUserImage: build.mutation({
+            query: ({id, file}) => ({
+                url: `/image/${id}`,
+                method: 'PUT',
+                body: file,
+                muiltipartFormData: true
+            })
+        }),
+        changeUserInfo: build.mutation({
+            query: (body) => ({
+                url: `/info`,
+                method: 'PUT',
+                body
             })
         })
     })

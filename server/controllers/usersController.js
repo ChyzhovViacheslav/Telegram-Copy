@@ -14,7 +14,7 @@ class usersController {
                 return res.status(400).json({ message: 'Registration error!', errors })
             }
 
-            const { username, email, password } = req.body
+            const { username, email, password, firstname, lastname } = req.body
 
             const candidate = await User.findOne({ email })
 
@@ -22,13 +22,19 @@ class usersController {
                 return res.status(400).json({ message: 'User with this email already exist!' })
             }
 
-            const hasPass = bcrypt.hashSync(password, 7)
+            if (!firstname || firstname.length < 3) {
+                return res.status(400).json({ message: 'First Name must not be less than 3 characters' })
+            }
+
+            const hashPass = bcrypt.hashSync(password, 7)
 
             const user = await User.create({
                 email,
                 username,
-                image: createLogo(username),
-                password: hasPass
+                images: [createLogo(username)],
+                password: hashPass,
+                firstname,
+                lastname
             })
 
             const userDto = new UserDto(user);
@@ -150,11 +156,60 @@ class usersController {
 
             const user = await User.findById(id)
 
-            if(!user){
-                res.status(400).json({message: 'User not found'})
+            if (!user) {
+                res.status(400).json({ message: 'User not found' })
             }
 
             res.status(200).json(user)
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
+        }
+    }
+
+    async changeUserPhoto(req, res) {
+        try {
+            const { id } = req.params
+            const image = req.file
+            if (!image) {
+                res.status(400).json({ message: 'Image not found' })
+            }
+
+            const user = await User.findById(id)
+
+            user.images = [image.filename, ...user.images]
+
+            await user.save()
+
+            res.status(200).json({ image: image.filename, message: 'Image uploaded' })
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
+        }
+    }
+
+    async changeUserInfo(req, res) {
+        try {
+            const { id, username, firstname, lastname, bio } = req.body
+
+            const user = await User.findById(id)
+
+            if (!firstname || firstname.length < 3) {
+                return res.status(400).json({ message: 'First Name must not be less than 3 characters' })
+            }
+
+            if(!username || username.length < 5){
+                return res.status(400).json({message: 'Username must not be less than 5 characters'})
+            }
+
+            user.firstname = firstname
+            user.lastname = lastname
+            user.username = username.toLowerCase()
+            user.bio = bio
+
+            await user.save()
+
+            res.status(200).json({message: 'User info was updated'})
         } catch (error) {
             console.log(error)
             res.status(400).json(error)

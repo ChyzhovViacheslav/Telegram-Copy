@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
+import { useAppDispatch } from '../../../hooks/redux'
 import { authUser } from '../../../services/AuthUser'
 import { setToken, setUser } from '../../../store/reducers/authSlice'
-import useAuth from '../../../hooks/useAuth'
+import InputDefault from '../../interface/inputDefault/InputDefault'
 
 const LoginFormWrapper = styled.form`
     display: flex;
@@ -22,56 +22,6 @@ const InputWrapper = styled.div`
     flex-direction: column;
     row-gap: 30px;
     margin-top: 60px;
-    label{
-        position: relative;
-        width: 100%;
-        ::after{
-            transform: translate(0%, -50%);
-            left: 15px;
-            top: 50%;
-            position: absolute;
-            color: var(--gray-text-color);
-            background-color: var(--surface-color);
-            padding: 0px 5px;
-            text-transform: capitalize;
-            transition: all 0.15s ease-in-out;
-            font-size: 18px;
-            pointer-events: none;
-        }
-    }
-    label:focus-within::after{
-        font-size: 12px !important;
-        top: 0% !important;
-        color: var(--primary-color);
-    }
-    label#email{
-        ::after{
-            content: 'email'
-        }
-    }
-    label#password{
-        ::after{
-            content: 'password'
-        }
-    }
-
-    input{
-        padding: 15px;
-        border-radius: 8px;
-        width: 100%;
-        background-color: inherit;
-        outline: solid var(--input-search-border-color);
-        transition: outline-color 0.2s ease-in-out;
-        outline-width: 1px;
-        :hover{
-            outline: solid var(--dark-primary-color);
-            outline-width: 1px;
-        }
-        :focus{
-            outline: solid var(--primary-color);
-            outline-width: 2px;
-        }
-    }
 `
 
 const Subtitle = styled.p`
@@ -95,26 +45,11 @@ const LoginBtn = styled.button`
     }
 `
 
-const EmailLabel = styled.label`
-    &::after{
-        font-size: ${props => props.active ? '12px' : '18px'} !important;
-        top: ${props => props.active ? '0%' : '50%'}!important;
-    }
-`
-
-const PasswordLabel = styled.label`
-    &::after{
-        font-size: ${props => props.active ? '12px' : '18px'} !important;
-        top: ${props => props.active ? '0%' : '50%'}!important;
-    }
-`
-
 export default function AuthModal() {
     const [loginUser] = authUser.useLoginUserMutation()
     const [registerUser] = authUser.useRegisterUserMutation()
 
     const dispatch = useAppDispatch()
-    const [currentForm, setCurrentForm] = useState('login')
 
     const [loginEmail, setLoginEmail] = useState('')
     const [loginPass, setLoginPass] = useState('')
@@ -161,20 +96,20 @@ export default function AuthModal() {
             <h1>Sign in to Copygram</h1>
             <Subtitle>Please enter your details below</Subtitle>
             <InputWrapper>
-                <EmailLabel active={!!loginEmail.length} id='email'>
-                    <input
-                        value={loginEmail}
-                        onChange={(e) => setLoginEmail(e.target.value)}/>
-                </EmailLabel>
-                <PasswordLabel active={!!loginPass} id='password'>
-                    <input 
-                        value={loginPass}
-                        onChange={(e) => setLoginPass(e.target.value)}/>
-                </PasswordLabel>
+                <InputDefault
+                    primary
+                    content={'email'}
+                    setValue={setLoginEmail}
+                    value={loginEmail} />
+                <InputDefault
+                    primary
+                    content={'password'}
+                    setValue={setLoginPass}
+                    value={loginPass} />
             </InputWrapper>
-            <LoginBtn 
+            <LoginBtn
                 onClick={(e) => loginHandler(e)}>
-                    <span>LOGIN</span>
+                <span>LOGIN</span>
             </LoginBtn>
         </LoginFormWrapper>
     )

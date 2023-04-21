@@ -64,7 +64,7 @@ export default function User({ roomId }) {
       onContextMenu={(e) => e.preventDefault()}>
       {user && !messageIsLoading ?
         <>
-          <Logo image={user?.image} size={'54px'} />
+          <Logo image={user?.images[0]} size={'54px'} />
           <Container current={roomId === currentRoom}>
             <h2>{user?.username}</h2>
             {lastMessage.message.length >= 60 ?

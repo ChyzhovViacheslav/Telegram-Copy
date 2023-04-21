@@ -11,7 +11,7 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     background-color: var(--surface-color);
-    width: 470px;
+    width: ${props=> props.isSettings ? '100%' : '470px'};
     height: 100%;
     flex-shrink: 0;
     pointer-events: ${props => props.open ? 'all' : 'none'};
@@ -28,12 +28,32 @@ const Actions = styled.div`
     }
 `
 
+const ActionsWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding-right: 10px;
+    h2{
+        flex: 1 0 auto;
+    }
+`
+
+const ChangeBtn = styled.div`
+    cursor: pointer;
+    border-radius: 50%;
+    padding: 10px;
+    &:hover{
+        background-color: var(--input-search-border-color);
+    }
+`
+
 const CloseBtn = styled.div`
     width: 44px;
     height: 44px;
     position: relative;
     cursor: pointer;
     border-radius: 50%;
+    flex-shrink: 0;
     &::after,&::before{
         content: '';
         position: absolute;
@@ -130,7 +150,7 @@ const UserInfoWrapper = styled.div`
     }
 `
 
-export default function SidebarUserInfo({ isOpen, setIsOpen, user, userLastActive }) {
+export default function SidebarUserInfo({ isOpen, setIsOpen, user, userLastActive, isSettings, setChangeUser }) {
     const dispatch = useAppDispatch()
 
     const copyHandler = (text) => {
@@ -140,13 +160,23 @@ export default function SidebarUserInfo({ isOpen, setIsOpen, user, userLastActiv
     }
 
     return (
-        <Wrapper open={isOpen}>
-            <Actions>
-                <CloseBtn onClick={() => setIsOpen(false)} />
-                <h2>User Info</h2>
-            </Actions>
+        <Wrapper
+            isSettings={isSettings}
+            open={isOpen}>
+                <Actions>
+                    <CloseBtn onClick={() => setIsOpen(false)} />
+                    {isSettings ? 
+                        <ActionsWrapper>
+                            <h2>Settings</h2>
+                            <ChangeBtn onClick={() => {setChangeUser(true)}}>
+                                <IconSelector id={'change'} color='#fff'/>
+                            </ChangeBtn> 
+                        </ActionsWrapper>
+                        : 
+                        <h2>User Info</h2>}
+                </Actions>
             <Images>
-                <Image src={require(`../../server/images/${user.image}`)} alt='image' />
+                <Image src={require(`../../server/images/${user.images[0]}`)} alt='image' />
                 <InfoName>
                     <h2>{user.username}</h2>
                     <UserIsOnline userId={user._id} lastActive={userLastActive} />
@@ -168,7 +198,7 @@ export default function SidebarUserInfo({ isOpen, setIsOpen, user, userLastActiv
                         <h2>{user.username}</h2>
                         <span>Username</span>
                     </div>
-                    <Ripple/>
+                    <Ripple />
                 </UserInfoWrapper>
             </UserInfo>
         </Wrapper>

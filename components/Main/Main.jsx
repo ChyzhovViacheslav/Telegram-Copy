@@ -8,20 +8,12 @@ import useAuth from '../../hooks/useAuth'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { changeCurrentRoom } from '../../store/reducers/roomSlice'
 import Notification from '../modals/Notification/Notification'
+import Sidebar from '../Sidebar/Sidebar'
 
 const MainWrapper = styled.div`
     display: flex;
     height: 100%;
     background-color: rgb(18, 25, 37);
-`
-
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
-    background-color: var(--surface-color);
-    height: 100%;
-    width: 500px;
-    flex-shrink: 0;
 `
 
 const EmptyRoom = styled.div`
@@ -56,10 +48,7 @@ export default function Main() {
 
     return (
         <MainWrapper>
-            <Container>
-                <Search />
-                <Users />
-            </Container>
+            <Sidebar/>
             {currentRoom ? <Room /> : <EmptyRoom><span>Select a chat from the list</span></EmptyRoom>}
             <Notification/>
         </MainWrapper>
