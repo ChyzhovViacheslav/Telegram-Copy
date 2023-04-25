@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import IconSelector from '../../../assets/icons/icons'
+import { changeSearchValue } from '../../../store/reducers/searchSlice'
+import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 
 const InputWrapper = styled.div`
     width: 100%;
@@ -10,6 +12,7 @@ const InputWrapper = styled.div`
     border-radius: 20px;
     align-items: center;
     margin-left: 15px;
+    overflow: hidden;
     svg{
         height: 18px;
         width: 18px;
@@ -34,6 +37,7 @@ const Input = styled.input`
     width: 100%;
     background-color: inherit;
     font-size: 16px;
+    line-height: 120%;
     color: var(--primary-text-color);
     &::placeholder{
         color: var(--primary-text-color);
@@ -41,14 +45,44 @@ const Input = styled.input`
     }
 `
 
+const ClearInput = styled.div`
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: ${props => props.active ? 'translate(-50%, -50%) scale(1) rotate(180deg)' : 'translate(-50%, -50%) scale(0)'};
+    pointer-events: ${props => props.active ? 'all' : 'none'};
+    right: 20px;
+    top: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    svg{
+        width: 20px;
+        height: 20px;
+        opacity: 0.7;
+    }
+`
+
 export default function InputSearch() {
-    const [text, setText] = useState('')
+    const {searchValue} = useAppSelector(state => state.searchSlice)
+    const dispatch = useAppDispatch()
+
+    const changeSearchValueHandler = (e) => {
+        dispatch(changeSearchValue(e.target.value))
+    }
+
+    const clearInputHandler = () => dispatch(changeSearchValue(''))
 
     return (
         <InputWrapper>
             <IconSelector id='search' />
             <Input
-                placeholder='Search' />
+                placeholder='Search'
+                value={searchValue}
+                onChange={changeSearchValueHandler} />
+            <ClearInput active={searchValue} onClick={clearInputHandler}>
+                <IconSelector id={'close'} color='#fff'/>
+            </ClearInput>
         </InputWrapper>
     )
 }

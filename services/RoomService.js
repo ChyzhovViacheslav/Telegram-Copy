@@ -65,6 +65,12 @@ export const roomService = createApi({
                 url: `/room/${room}`,
                 method: 'GET'
             })
+        }),
+        deleteRoom: build.query({
+            query: ({room}) => ({
+                url: `/delete/${room}`,
+                method: 'GET'
+            })
         })
     })
 })

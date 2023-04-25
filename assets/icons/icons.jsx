@@ -83,6 +83,32 @@ export default function IconSelector({ id, color = '#121720' }) {
                     <path d="M9.00002 16.17L5.53002 12.7C5.34305 12.513 5.08945 12.4079 4.82502 12.4079C4.5606 12.4079 4.307 12.513 4.12002 12.7C3.93305 12.8869 3.828 13.1405 3.828 13.405C3.828 13.5359 3.85379 13.6655 3.9039 13.7865C3.954 13.9075 4.02744 14.0174 4.12002 14.11L8.30002 18.29C8.69002 18.68 9.32002 18.68 9.71002 18.29L20.29 7.70996C20.477 7.52298 20.582 7.26938 20.582 7.00496C20.582 6.74053 20.477 6.48693 20.29 6.29996C20.103 6.11298 19.8494 6.00793 19.585 6.00793C19.3206 6.00793 19.067 6.11298 18.88 6.29996L9.00002 16.17Z" fill={color} />
                 </svg>
             )
+        case 'loading':
+            return (
+                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="21px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+                    <circle cx="84" cy="50" r="10" fill="#ffffff">
+                        <animate attributeName="r" repeatCount="indefinite" dur="0.25s" calcMode="spline" keyTimes="0;1" values="10;0" keySplines="0 0.5 0.5 1" begin="0s"></animate>
+                        <animate attributeName="fill" repeatCount="indefinite" dur="1s" calcMode="discrete" keyTimes="0;0.25;0.5;0.75;1" values="#ffffff;#ffffff;#ffffff;#ffffff;#ffffff" begin="0s"></animate>
+                    </circle><circle cx="16" cy="50" r="10" fill="#ffffff">
+                        <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="0s"></animate>
+                        <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="0s"></animate>
+                    </circle><circle cx="50" cy="50" r="10" fill="#ffffff">
+                        <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.25s"></animate>
+                        <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.25s"></animate>
+                    </circle><circle cx="84" cy="50" r="10" fill="#ffffff">
+                        <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.5s"></animate>
+                        <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.5s"></animate>
+                    </circle><circle cx="16" cy="50" r="10" fill="#ffffff">
+                        <animate attributeName="r" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="0;0;10;10;10" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.75s"></animate>
+                        <animate attributeName="cx" repeatCount="indefinite" dur="1s" calcMode="spline" keyTimes="0;0.25;0.5;0.75;1" values="16;16;16;50;84" keySplines="0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1;0 0.5 0.5 1" begin="-0.75s"></animate>
+                    </circle></svg>
+            )
+        case 'close':
+            return (
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 21L12 12M12 12L3 3M12 12L21 3M12 12L3 21" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+            )
         default:
             return null
     }

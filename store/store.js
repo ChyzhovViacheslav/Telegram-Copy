@@ -6,6 +6,7 @@ import { authUser } from "../services/AuthUser";
 import { roomService } from "../services/RoomService";
 import authSlice from "./reducers/authSlice";
 import roomSlice from './reducers/roomSlice';
+import searchSlice from "./reducers/searchSlice";
 import modalsSlice from "./reducers/modalsSlice";
 import thunk from "redux-thunk";
 
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     authSlice,
     roomSlice,
     modalsSlice,
+    searchSlice,
     [authUser.reducerPath]: authUser.reducer,
     [roomService.reducerPath]: roomService.reducer
 })

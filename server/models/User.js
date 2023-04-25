@@ -9,8 +9,8 @@ const User = new Schema({
     last_active: {type: Date, required: false, default: null},
     bio: {type: String, required: false},
     firstname: {type: String, required: true},
-    lastname: {type: String, required: false, default: null},
-    bio: {type: String, required: false, default: null}
+    lastname: {type: String, required: false, default: ''},
+    bio: {type: String, required: false, default: ''}
 })
 
 module.exports = model('User', User)

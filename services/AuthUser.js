@@ -62,6 +62,12 @@ export const authUser = createApi({
                 method: 'PUT',
                 body
             })
+        }),
+        searchUsers: build.query({
+            query: (username) => ({
+                url: `/search/${username}`,
+                method: 'GET'
+            })
         })
     })
 })

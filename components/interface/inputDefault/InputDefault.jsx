@@ -6,7 +6,7 @@ const InputLabel = styled.label`
     &:focus-within::after{
         font-size: 12px !important;
         top: 0% !important;
-        color: var(--primary-color);
+        color: ${props => props.type === 'warn' ? 'var(--danger-color)' : 'var(--primary-color)'};;
     }
     &::after{
         position: absolute;
@@ -25,7 +25,7 @@ const InputLabel = styled.label`
     }
     &:hover{
         &::after{
-            color: var(--primary-color);
+            color: ${props => props.type === 'warn' ? 'var(--danger-color)' : 'var(--primary-color)'};
         }
     }
 
@@ -35,24 +35,33 @@ const InputLabel = styled.label`
         border-radius: 12px;
         width: 100%;
         background-color: inherit;
-        outline: solid ${props => props.primary ? 'var(--input-search-border-color)' : 'var(--input-search-border-secondary-color)'};
+        outline: solid ${props => {
+        switch (props.type) {
+            case 'primary':
+                return 'var(--input-search-border-color)';
+            case 'warn':
+                return 'var(--danger-color)';
+            default:
+                return 'var(--input-search-border-secondary-color)';
+        }
+    }};
         transition: outline-color 0.2s ease-in-out;
         outline-width: 1px;
         :hover{
-            outline: solid var(--dark-primary-color);
+            outline: solid ${props => props.type === 'warn' ? 'var(--dark-danger-color)' : 'var(--dark-primary-color)'};
             outline-width: 1px;
         }
         :focus{
-            outline: solid var(--primary-color);
+            outline: solid ${props => props.type === 'warn' ? 'var(--danger-color)' : 'var(--primary-color)'};
             outline-width: 2px;
         }
     }
 `
 
-export default function InputDefault({ value, setValue, content, primary }) {
+export default function InputDefault({ value, setValue, content, type }) {
     return (
         <InputLabel
-            primary={primary}
+            type={type}
             active={!!value.length}
             content={content}>
             <input

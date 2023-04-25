@@ -16,10 +16,11 @@ class usersController {
 
             const { username, email, password, firstname, lastname } = req.body
 
-            const candidate = await User.findOne({ email })
+            const candidateEmail = await User.findOne({ email })
+            const candidateUsername = await User.findOne({ username })
 
-            if (candidate) {
-                return res.status(400).json({ message: 'User with this email already exist!' })
+            if (candidateEmail || candidateUsername) {
+                return res.status(400).json({ message: 'User with this email or username already exist!' })
             }
 
             if (!firstname || firstname.length < 3) {
@@ -198,8 +199,8 @@ class usersController {
                 return res.status(400).json({ message: 'First Name must not be less than 3 characters' })
             }
 
-            if(!username || username.length < 5){
-                return res.status(400).json({message: 'Username must not be less than 5 characters'})
+            if (!username || username.length < 5) {
+                return res.status(400).json({ message: 'Username must not be less than 5 characters' })
             }
 
             user.firstname = firstname
@@ -209,7 +210,22 @@ class usersController {
 
             await user.save()
 
-            res.status(200).json({message: 'User info was updated'})
+            res.status(200).json({ message: 'User info was updated' })
+        } catch (error) {
+            console.log(error)
+            res.status(400).json(error)
+        }
+    }
+
+    async searchUsers(req, res) {
+        try {
+            const { username } = req.params
+            
+            const regexpTerm = new RegExp(`^${username}`, 'i')
+
+            const users = await User.find({username: regexpTerm})
+
+            res.status(200).json(users)
         } catch (error) {
             console.log(error)
             res.status(400).json(error)

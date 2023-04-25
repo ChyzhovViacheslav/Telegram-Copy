@@ -25,31 +25,37 @@ class messageController {
             const { name, user } = req.body
 
             const users = [id, user]
-            
+
             const room = new Room({ name, users })
 
             users.forEach(async user => {
                 const candidate = await User.findById(user)
-                
+
                 if (!candidate) {
                     res.status(400).json({ message: 'User not found' })
                 }
-                
+
                 candidate.current_rooms = [...candidate.current_rooms, room._id]
 
                 await candidate.save()
             })
 
             const message = new Message({
-                author: 'system', 
-                message: 'Room created!', 
+                author: 'system',
+                message: 'Room created!',
                 room: room._id
             })
 
+            const secondUser = await User.findById(user)
+
             await room.save()
             await message.save()
-            
-            res.status(200).json({ message: `Room "${name}" created` })
+
+            res.status(200).json({
+                room_id: room._id,
+                message: `Room "${name}" created`,
+                user: secondUser
+            })
         } catch (error) {
             console.log(error)
             res.status(400).json(error)
@@ -63,6 +69,10 @@ class messageController {
 
 
             const room = await Room.findById(id)
+
+            if (!room) {
+                res.status(404).json({ message: 'Room not found!' })
+            }
 
             if (!room.users.includes(userId)) {
                 res.status(400).json({ message: `It's not your room!` })
@@ -160,15 +170,18 @@ class messageController {
 
     async getOneRoom(req, res) {
         try {
+            const { id: userId } = req.user
             const { id } = req.params
 
             const room = await Room.findById(id)
 
-            if(!room){
-                res.status(400).json({message: 'Room not found'})
+            if (!room) {
+                res.status(400).json({ message: 'Room not found' })
             }
 
-            res.status(200).json(room)
+            const secondUser = await User.findById(room.users.filter(user => user != userId)[0])
+            
+            res.status(200).json({ room: room, user: secondUser })
         } catch (error) {
             console.log(error)
             res.status(400).json(error)

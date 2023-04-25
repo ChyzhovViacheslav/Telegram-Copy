@@ -5,6 +5,7 @@ import Users from '../Users/Users'
 import SidebarUserInfo from '../SidebarUserInfo/SidebarUserInfo'
 import useAuth from '../../hooks/useAuth'
 import UserInfo from '../UserInfo/UserInfo'
+import { useAppSelector } from '../../hooks/redux'
 
 const SidebarWrapper = styled.div`
     display: flex;
@@ -21,9 +22,7 @@ export default function Sidebar() {
     const [changeUserInfoIsOpen, setChangeUserInfoIsOpen] = useState(false)
     const { username, email, images } = useAuth()
 
-    const closeSettings = () => {
-        setSettingsIsOpen(false)
-    }
+    const closeSettings = () => setSettingsIsOpen(false)
 
     return (
         <SidebarWrapper>
@@ -35,7 +34,7 @@ export default function Sidebar() {
                 <>
                     {changeUserInfoIsOpen ?
                         <UserInfo
-                            setIsOpen={setChangeUserInfoIsOpen}/>
+                            setIsOpen={setChangeUserInfoIsOpen} />
                         :
                         <SidebarUserInfo
                             setChangeUser={setChangeUserInfoIsOpen}

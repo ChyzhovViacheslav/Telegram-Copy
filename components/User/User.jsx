@@ -37,24 +37,15 @@ const Container = styled.div`
 `
 
 export default function User({ roomId }) {
-  const { id: currentUserId } = useAuth()
-  const [userId, setUserId] = useState(null)
   const dispatch = useAppDispatch()
 
-  const { data: room, isLoading: roomIsLoading } = roomService.useGetOneRoomQuery({ room: roomId })
+  const { data: room } = roomService.useGetOneRoomQuery({ room: roomId })
   const { data: lastMessage, isLoading: messageIsLoading } = roomService.useGetLastMessageRoomQuery({ room: roomId })
-  const { data: user } = authUser.useGetOneUserQuery({ id: userId }, { skip: !userId })
   const { currentRoom } = useAppSelector(state => state.roomSlice)
-
-  useEffect(() => {
-    if (room) {
-      setUserId(room.users.filter(id => id !== currentUserId)[0])
-    }
-  }, [roomIsLoading])
 
   const openRoomHandler = () => {
     dispatch(changeCurrentRoom(roomId))
-    dispatch(changeCurrentUser(user))
+    dispatch(changeCurrentUser(room.user))
   }
 
   return (
@@ -62,11 +53,11 @@ export default function User({ roomId }) {
       current={roomId === currentRoom}
       onClick={openRoomHandler}
       onContextMenu={(e) => e.preventDefault()}>
-      {user && !messageIsLoading ?
+      {!messageIsLoading ?
         <>
-          <Logo image={user?.images[0]} size={'54px'} />
+          <Logo image={room?.user.images[0]} size={'54px'} />
           <Container current={roomId === currentRoom}>
-            <h2>{user?.username}</h2>
+            <h2>{room?.user.firstname}</h2>
             {lastMessage.message.length >= 60 ?
               <p>{lastMessage.message.slice(0, 60)}...</p>
               :

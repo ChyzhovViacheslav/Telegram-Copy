@@ -296,7 +296,7 @@ export default function UserInfo({ setIsOpen }) {
                     content={'Username'}
                     value={userName}
                     setValue={setUserName} />
-                <p>You can choose a username on CopyGram. If you do, people will be able to find you by this username and contact you without needing your phone number.
+                <p>You can choose a username on CopyGram. If you do, people will be able to find you by this username and contact you without needing your email.
                     <br />
                     <br />
                     You can use a–z, 0–9 and underscores. Minimum length is 5 characters.</p>
