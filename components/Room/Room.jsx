@@ -67,6 +67,7 @@ const Container = styled.div`
 const MessagesWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: flex-end;
     width: 100%;
     height: 100%;
     overflow: auto;
@@ -86,7 +87,6 @@ const MessagesWrapper = styled.div`
 const MessageWrapper = styled.div`
     display: flex;
     align-items: center;
-    margin-top: auto;
     ${props => {
         switch (props.variant) {
             case 'first-user':

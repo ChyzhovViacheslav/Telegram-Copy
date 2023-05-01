@@ -5,7 +5,6 @@ import Users from '../Users/Users'
 import SidebarUserInfo from '../SidebarUserInfo/SidebarUserInfo'
 import useAuth from '../../hooks/useAuth'
 import UserInfo from '../UserInfo/UserInfo'
-import { useAppSelector } from '../../hooks/redux'
 
 const SidebarWrapper = styled.div`
     display: flex;

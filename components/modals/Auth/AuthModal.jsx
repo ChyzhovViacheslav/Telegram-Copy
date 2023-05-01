@@ -97,7 +97,7 @@ export default function AuthModal() {
     const [inputType, setInputType] = useState('primary')
     const [passType, setPassType] = useState('primary')
 
-    const [currentForm, setCurrentForm] = useState('registration')
+    const [currentForm, setCurrentForm] = useState('login')
 
     const loginHandler = async (e) => {
         e.preventDefault()
@@ -186,7 +186,7 @@ export default function AuthModal() {
                             type={inputType}
                             content={'username'}
                             setValue={setRegUsername}
-                            value={regUsername} />
+                            value={regUsername.toLowerCase()} />
                         <InputDefault
                             type={inputType}
                             content={'email'}

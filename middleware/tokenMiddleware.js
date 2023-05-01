@@ -1,6 +1,3 @@
-import { useAppDispatch } from "../hooks/redux";
-import { setToken } from "../store/reducers/authSlice";
-
 const getNewAccessToken = async () => {
     const response = await fetch('http://localhost:2000/user/refresh', {
         method: 'GET',
@@ -11,18 +8,16 @@ const getNewAccessToken = async () => {
     })
 
     const token = await response.json()
-
     return token
 }
 
 export const tokenMiddleware = (store) => (next) => async (action) => {
-    const state = store.getState();
-    const expiresAt = state.authSlice.expiresAt;
-    const now = Date.now()
-
-    if (now > Date.parse(expiresAt) && expiresAt !== null) {
-        const newToken = await getNewAccessToken();
-        store.dispatch(setToken(newToken));
+    if (typeof window !== 'undefined') {
+        const accessToken = document.cookie.split(';').find(cookie => cookie.trim().startsWith('accessToken='));
+        
+        if (!accessToken) {
+            await getNewAccessToken();
+        }
     }
 
     return next(action);

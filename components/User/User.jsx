@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import useAuth from '../../hooks/useAuth'
-import { authUser } from '../../services/AuthUser'
 import { roomService } from '../../services/RoomService'
 import Logo from '../interface/logo/Logo'
 import { changeCurrentRoom, changeCurrentUser } from '../../store/reducers/roomSlice'
 import Ripple from '../interface/ripple/Ripple'
+import SettingsModal from '../modals/SettingsModal/SettingsModal'
+import IconSelector from '../../assets/icons/icons'
 
 const UserWrapper = styled.div`
     position: relative;
@@ -37,9 +37,12 @@ const Container = styled.div`
 `
 
 export default function User({ roomId }) {
+  const [mouseLocation, setMouseLoaction] = useState(null)
+  const [modalIsOpen, setModalIsOpen] = useState(false)
   const dispatch = useAppDispatch()
 
   const { data: room } = roomService.useGetOneRoomQuery({ room: roomId })
+  const [deleteRoom] = roomService.useDeleteRoomMutation()
   const { data: lastMessage, isLoading: messageIsLoading } = roomService.useGetLastMessageRoomQuery({ room: roomId })
   const { currentRoom } = useAppSelector(state => state.roomSlice)
 
@@ -48,11 +51,21 @@ export default function User({ roomId }) {
     dispatch(changeCurrentUser(room.user))
   }
 
+  const openModalHandler = (e) => {
+    e.preventDefault()
+    setMouseLoaction({ x: e.clientX, y: e.clientY - 50 })
+    setModalIsOpen(true)
+  }
+
+  const deleteRoomHandler = async () => {
+    await deleteRoom(roomId)
+  }
+
   return (
     <UserWrapper
       current={roomId === currentRoom}
       onClick={openRoomHandler}
-      onContextMenu={(e) => e.preventDefault()}>
+      onContextMenu={openModalHandler}>
       {!messageIsLoading ?
         <>
           <Logo image={room?.user.images[0]} size={'54px'} />
@@ -64,6 +77,12 @@ export default function User({ roomId }) {
               <p>{lastMessage.message}</p>}
           </Container>
           <Ripple />
+          <SettingsModal
+            location={mouseLocation}
+            open={modalIsOpen}
+            setOpen={setModalIsOpen}>
+            <div onClick={deleteRoomHandler}><IconSelector id={'delete'} color='var(--dark-danger-color)' /><span>Delete chat</span></div>
+          </SettingsModal>
         </>
         : <h1>Load...</h1>}
     </UserWrapper>

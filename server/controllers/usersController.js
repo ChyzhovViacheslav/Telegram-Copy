@@ -31,7 +31,7 @@ class usersController {
 
             const user = await User.create({
                 email,
-                username,
+                username: username.toLowerCase(),
                 images: [createLogo(username)],
                 password: hashPass,
                 firstname,
@@ -43,9 +43,15 @@ class usersController {
             await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
             res.cookie(
+                'accessToken',
+                tokens.accessToken,
+                { maxAge: 900000, httpOnly: false }
+            )
+
+            res.cookie(
                 'refreshToken',
                 tokens.refreshToken,
-                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: false }
             )
 
             return res.status(200).json({
@@ -56,6 +62,7 @@ class usersController {
 
         } catch (error) {
             console.log(error)
+            res.status(400).json({message: error})
         }
     }
     async login(req, res) {
@@ -79,9 +86,15 @@ class usersController {
             await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
             res.cookie(
+                'accessToken',
+                tokens.accessToken,
+                { maxAge: 900000, httpOnly: false }
+            )
+
+            res.cookie(
                 'refreshToken',
                 tokens.refreshToken,
-                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true }
+                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: false }
             )
 
             return res.status(200).json({
@@ -126,7 +139,7 @@ class usersController {
             const tokenFromDb = await tokenService.findToken(refreshToken)
 
             if (!tokenFromDb || !userData) {
-                return res.status(400).json({ message: 'Token not found!' })
+                return res.status(400).json({ message: 'Token not found!', tokenFromDb: tokenFromDb })
             }
 
             const user = await User.findById(userData.id);
@@ -135,14 +148,19 @@ class usersController {
             await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
             res.cookie(
+                'accessToken',
+                tokens.accessToken,
+                { maxAge: 900000, httpOnly: false }
+            )
+
+            res.cookie(
                 'refreshToken',
                 tokens.refreshToken,
-                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true })
+                { maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: false })
 
             return res.status(200).json({
                 ...tokens,
-                user: userDto,
-                expiresAt: new Date(new Date().getTime() + 30 * 60 * 1000)
+                user: userDto
             })
 
         } catch (error) {
@@ -220,10 +238,10 @@ class usersController {
     async searchUsers(req, res) {
         try {
             const { username } = req.params
-            
+
             const regexpTerm = new RegExp(`^${username}`, 'i')
 
-            const users = await User.find({username: regexpTerm})
+            const users = await User.find({ username: regexpTerm })
 
             res.status(200).json(users)
         } catch (error) {

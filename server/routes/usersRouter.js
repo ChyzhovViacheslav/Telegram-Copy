@@ -23,7 +23,7 @@ router.post('/register', [
   check('email', `Mail must not be empty`).notEmpty()
 ], controller.registration)
 router.get('/logout', authMiddleware, controller.logout)
-router.get('/refresh', authMiddleware, controller.refreshToken)
+router.get('/refresh', controller.refreshToken)
 router.get('/user/:id', authMiddleware, controller.getOneUser)
 router.put('/image/:id', authMiddleware, upload.single('image'), controller.changeUserPhoto)
 router.put('/info', authMiddleware, controller.changeUserInfo)

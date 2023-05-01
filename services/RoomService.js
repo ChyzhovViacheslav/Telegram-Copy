@@ -48,28 +48,16 @@ export const roomService = createApi({
                 method: 'GET'
             })
         }),
-        assignRoom: build.mutation({
-            query: ({room}) => ({
-                url: `/assign/${room}`,
-                method: 'PUT'
-            })
-        }),
-        untieRoom: build.mutation({
-            query: (room) => ({
-                url: `/untie/${room}`,
-                method: 'PUT'
-            })
-        }),
         getOneRoom: build.query({
             query: ({room}) => ({
                 url: `/room/${room}`,
                 method: 'GET'
             })
         }),
-        deleteRoom: build.query({
-            query: ({room}) => ({
+        deleteRoom: build.mutation({
+            query: (room) => ({
                 url: `/delete/${room}`,
-                method: 'GET'
+                method: 'DELETE'
             })
         })
     })

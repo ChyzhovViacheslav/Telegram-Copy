@@ -12,17 +12,23 @@ const UsersWrapper = styled.div`
   height: 100%;
   padding: 5px 0px;
   overflow-y: auto;
-  ::-webkit-scrollbar {
-        width: 5px;
-        background-color: none;
+  ::-webkit-scrollbar{
+    opacity: 0;
+  }
+  &:hover{
+    ::-webkit-scrollbar {
+      opacity: 1;
+      width: 5px;
+      background-color: none;
     }
     ::-webkit-scrollbar-track {
-        background-color: none;
+      background-color: none;
     }
     ::-webkit-scrollbar-thumb {
-        background-color: rgba(255, 255, 255, 0.4);
-        border-radius: 8px;
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 8px;
     }
+  }
 `
 
 export default function Users() {
@@ -35,7 +41,6 @@ export default function Users() {
   useEffect(() => {
 
   }, [searchValue])
-
 
   const renderRooms = () => {
     return rooms?.current_rooms.map((room) => {
